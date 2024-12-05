@@ -266,15 +266,36 @@ const copyShareCode = async () => {
   }
 }
 
-// 从URL或文本中提取shareCode
-const extractShareCode = (text: string) => {
-  // 如果是完整URL，提取hash部分
-  if (text.includes('#')) {
-    const hashIndex = text.lastIndexOf('#')
-    return text.slice(hashIndex + 1)
+// 提取分享码的函数
+const extractShareCode = (input: string): string => {
+  console.log('原始输入:', input)
+
+  // 移除可能的查询参数
+  const cleanInput = input.split('?')[0].trim()
+  console.log('清理后输入:', cleanInput)
+
+  // 检查是否包含 hash
+  if (cleanInput.includes('#')) {
+    const hashIndex = cleanInput.lastIndexOf('#')
+    const hashCode = cleanInput.slice(hashIndex + 1)
+    console.log('Hash提取:', hashCode)
+    return hashCode
   }
-  // 否则认为整个文本就是shareCode
-  return text
+
+  // 检查是否是完整的 URL
+  try {
+    const url = new URL(cleanInput)
+    // 如果是 URL，提取最后一个路径片段
+    const urlCode = url.pathname.split('/').pop() || ''
+    console.log('URL提取:', urlCode)
+    return urlCode
+  } catch (e) {
+    console.log('URL解析错误:', e)
+  }
+
+  // 如果不是 URL，直接返回输入
+  console.log('直接返回输入:', cleanInput)
+  return cleanInput
 }
 
 // 导入游戏数据
@@ -284,21 +305,19 @@ const importGame = () => {
   try {
     // 提取shareCode
     const code = extractShareCode(importText.value.trim())
+    console.log('最终提取的分享码:', code)
 
-    // 反转字符串
+    // 后续导入逻辑保持不变
     const reversed = code.split('').reverse().join('')
 
-    // 解码 base64
     const binary = atob(reversed)
     const bytes = new Uint8Array(binary.length)
     for (let i = 0; i < binary.length; i++) {
       bytes[i] = binary.charCodeAt(i)
     }
 
-    // 使用 pako 解压缩
     const decompressed = pako.inflate(bytes, { to: 'string' })
 
-    // 解析 JSON
     const imported = JSON.parse(decompressed)
 
     // 重置数据
@@ -318,6 +337,7 @@ const importGame = () => {
     importText.value = ''
     showImportError.value = false  // 导入成功时隐藏错误提示
   } catch (e) {
+    console.error('导入失败，详细错误:', e)
     showImportError.value = true  // 显示错误提示
     setTimeout(() => {
       showImportError.value = false  // 3秒后自动隐藏错误提示
