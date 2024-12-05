@@ -20,7 +20,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Type Declarations */
+    "types": ["vite-plugin-pages/client"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["src/**/__tests__/*"]
 }
