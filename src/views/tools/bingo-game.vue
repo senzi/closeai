@@ -72,10 +72,17 @@
             @blur="finishEditing('description')" @keyup.enter="finishEditing('description')" placeholder="输入描述"
             class="inline-edit" />
           <p v-else @click="startEditing('description')" class="editable">
-            五点连一线,{{ gameData.description || '点击编辑描述' }}
+            五点连一线,{{ gameData.description || '<点击编辑描述>' }}
           </p>
         </div>
-        <p v-else>{{ gameData.description || '暂无描述' }}</p>
+        <p v-else :style="{
+          backgroundColor: hasCompletedLine ? '#dbeafe' : 'transparent', 
+          color: hasCompletedLine ? '#1e40af' : 'inherit',
+          padding: hasCompletedLine ? '0.25rem 0.5rem' : '0',
+          borderRadius: hasCompletedLine ? '0.25rem' : '0'
+        }">
+          五点连一线,{{ gameData.description || '啥也不是(制表人没写)' }}{{ hasCompletedLine ? ' ✓' : '' }}
+        </p>
       </div>
 
       <!-- 5x5 表格 -->
@@ -85,7 +92,8 @@
           {
             'editable': mode === 'edit',
             'selected': mode === 'play' && selectedCells[index],
-            'editing': editingField === `cell-${index}`
+            'editing': editingField === `cell-${index}`,
+            'completed-line': mode === 'play' && completedLineIndices.includes(index)
           }
         ]" @click="handleCellClick(index)">
           <div class="cell-content" v-if="!(mode === 'edit' && editingField === `cell-${index}`)">
@@ -448,6 +456,68 @@ const finishEditing = (field: string) => {
     editingField.value = null
   }
 }
+
+// 是否完成一行
+const hasCompletedLine = computed(() => {
+  // 检查所有行
+  for (let i = 0; i < 5; i++) {
+    if (selectedCells.slice(i * 5, (i + 1) * 5).every(selected => selected)) {
+      return true
+    }
+  }
+
+  // 检查所有列
+  for (let i = 0; i < 5; i++) {
+    const columnIndices = [0, 1, 2, 3, 4].map(j => j * 5 + i)
+    if (columnIndices.every(index => selectedCells[index])) {
+      return true
+    }
+  }
+
+  // 检查主对角线
+  if ([0, 6, 12, 18, 24].every(i => selectedCells[i])) {
+    return true
+  }
+
+  // 检查副对角线
+  if ([4, 8, 12, 16, 20].every(i => selectedCells[i])) {
+    return true
+  }
+
+  return false
+})
+
+// 完成线的索引
+const completedLineIndices = computed(() => {
+  const indices: number[] = []
+
+  // 检查所有行
+  for (let i = 0; i < 5; i++) {
+    if (selectedCells.slice(i * 5, (i + 1) * 5).every(selected => selected)) {
+      indices.push(...Array(5).fill(0).map((_, j) => i * 5 + j))
+    }
+  }
+
+  // 检查所有列
+  for (let i = 0; i < 5; i++) {
+    const columnIndices = [0, 1, 2, 3, 4].map(j => j * 5 + i)
+    if (columnIndices.every(index => selectedCells[index])) {
+      indices.push(...columnIndices)
+    }
+  }
+
+  // 检查主对角线
+  if ([0, 6, 12, 18, 24].every(i => selectedCells[i])) {
+    indices.push(...[0, 6, 12, 18, 24])
+  }
+
+  // 检查副对角线
+  if ([4, 8, 12, 16, 20].every(i => selectedCells[i])) {
+    indices.push(...[4, 8, 12, 16, 20])
+  }
+
+  return indices
+})
 </script>
 
 <style scoped>
@@ -600,6 +670,12 @@ const finishEditing = (field: string) => {
   color: white;
 }
 
+.bingo-cell.completed-line {
+  font-weight: bold;    /* 加粗 */
+  transition: all 0.3s ease; /* 平滑过渡 */
+  border: 2px solid #aa0d0d; /* 添加边框 */
+}
+
 .editable {
   cursor: text;
   transition: opacity 0.2s;
@@ -684,7 +760,7 @@ const finishEditing = (field: string) => {
 }
 
 .copy-success {
-  color: #059669;
+  color: #17377b;
   font-size: 0.875rem;
   font-weight: 500;
   padding: 0.25rem 0.5rem;
