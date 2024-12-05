@@ -11,10 +11,10 @@
     <div class="mode-tabs">
       <div class="mode-buttons">
         <button :class="['tab-btn', { active: mode === 'edit' }]" @click="switchMode('edit')">
-          编辑
+          创建宾果
         </button>
         <button :class="['tab-btn', { active: mode === 'play' }]" @click="switchMode('play')">
-          填表
+          填写宾果w
         </button>
       </div>
       <button v-if="mode === 'edit'" @click="showClearConfirmation = true" class="clear-btn">
@@ -27,10 +27,27 @@
       <div class="clear-dialog">
         <p>确定要清空所有数据吗？此操作不可撤销。</p>
         <div class="confirmation-actions">
-          <button @click="clearAllData" class="clear-confirm-btn">确定</button>
-          <button @click="showClearConfirmation = false" class="clear-cancel-btn">取消</button>
+          <button @click="clearAllData" class="clear-confirm-btn">
+            确定
+          </button>
+          <button @click="showClearConfirmation = false" class="clear-cancel-btn">
+            取消
+          </button>
         </div>
       </div>
+    </div>
+
+    <!-- 填表模式的导入功能 -->
+    <div class="import-wrapper">
+      <div v-if="mode === 'play'" class="import-section">
+        <input v-model="importText" placeholder="粘贴宾果游戏数据或分享链接" class="import-input" />
+        <button @click="importGame" class="import-btn">
+          导入
+        </button>
+      </div>
+      <transition name="fade">
+        <p v-if="showImportError" class="import-error">导入失败：无效的数据格式</p>
+      </transition>
     </div>
 
     <!-- 游戏内容 -->
@@ -45,7 +62,7 @@
             {{ gameData.title || '点击编辑标题' }} 宾果
           </h2>
         </div>
-        <h2 v-else>{{ gameData.title || '未命名' }} 宾果</h2>
+        <h2 v-else>{{ gameData.title || '未命名' }}宾果</h2>
       </div>
 
       <!-- 描述 -->
@@ -55,16 +72,10 @@
             @blur="finishEditing('description')" @keyup.enter="finishEditing('description')" placeholder="输入描述"
             class="inline-edit" />
           <p v-else @click="startEditing('description')" class="editable">
-            {{ gameData.description || '点击编辑描述' }}
+            五点连一线,{{ gameData.description || '点击编辑描述' }}
           </p>
         </div>
         <p v-else>{{ gameData.description || '暂无描述' }}</p>
-      </div>
-
-      <!-- 填表模式的导入功能 -->
-      <div v-if="mode === 'play'" class="import-section">
-        <input v-model="importText" placeholder="粘贴宾果游戏数据" class="import-input" />
-        <button @click="importGame" class="import-btn">导入</button>
       </div>
 
       <!-- 5x5 表格 -->
@@ -86,14 +97,29 @@
         </div>
       </div>
 
+      <!-- 制表人 -->
+      <div class="creator-section">
+        <div v-if="mode === 'edit'" class="editable-field">
+          <input v-if="editingField === 'creator'" ref="creatorInput" v-model="gameData.creator"
+            @blur="finishEditing('creator')" @keyup.enter="finishEditing('creator')" placeholder="输入制表人"
+            class="inline-edit creator-input" />
+          <p v-else @click="startEditing('creator')" class="editable creator-text">
+            制表人：{{ gameData.creator || '点击编辑制表人' }}
+          </p>
+        </div>
+        <p v-else class="creator-text">
+          制表人：{{ gameData.creator || '未署名' }}
+        </p>
+      </div>
+
       <!-- 分享环节（仅编辑模式） -->
       <div v-if="mode === 'edit'" class="share-section">
         <div class="share-hint">点击下方按钮复制宾果内容分享给好友 👇</div>
         <div class="share-box">
           <div class="share-controls">
-            <input ref="shareInput" :value="shareCode" readonly class="share-input" />
+            <input ref="shareInput" :value="shareUrl" readonly class="share-input" />
             <button @click="copyShareCode" class="copy-btn">
-              复制
+              复制链接
             </button>
           </div>
           <div class="copy-feedback">
@@ -110,6 +136,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch, computed, nextTick } from 'vue'
 import * as pako from 'pako'
+import { useRoute } from 'vue-router'
 
 // 游戏模式
 const mode = ref<'edit' | 'play'>('edit')
@@ -117,10 +144,14 @@ const mode = ref<'edit' | 'play'>('edit')
 // 导入文本
 const importText = ref('')
 
+// 导入错误提示
+const showImportError = ref(false)
+
 // 正在编辑的字段
 const editingField = ref<string | null>(null)
 const titleInput = ref<HTMLInputElement | null>(null)
 const descriptionInput = ref<HTMLInputElement | null>(null)
+const creatorInput = ref<HTMLInputElement | null>(null)  // 添加 creatorInput 的 ref
 const cellInputs = ref<HTMLInputElement[]>([])
 
 // 添加一个方法来设置单元格输入框的 ref
@@ -141,6 +172,7 @@ const setCellInputRef = (el: HTMLInputElement | null, index: number) => {
 const initialGameData = {
   title: '',
   description: '',
+  creator: '',
   cells: Array(25).fill('')
 }
 
@@ -152,20 +184,18 @@ const selectedCells = reactive(Array(25).fill(false))
 // 从本地存储加载数据
 const loadSavedData = () => {
   const savedData = localStorage.getItem('bingo-game-data')
-  console.log('尝试加载保存的数据:', savedData)
 
   if (savedData) {
     try {
       const parsed = JSON.parse(savedData)
-      console.log('解析后的数据:', parsed)
 
       gameData.title = parsed.title || ''
       gameData.description = parsed.description || ''
+      gameData.creator = parsed.creator || ''  // 加载creator字段
       gameData.cells = Array.isArray(parsed.cells) ?
         parsed.cells.map((cell: string | null) => cell || '') :
         Array(25).fill('')
 
-      console.log('加载后的游戏数据:', { ...gameData })
     } catch (e) {
       console.error('加载保存的数据失败:', e)
     }
@@ -174,6 +204,13 @@ const loadSavedData = () => {
   }
 }
 
+// 获取完整的分享URL
+const shareUrl = computed(() => {
+  if (!shareCode.value) return ''
+  const baseUrl = window.location.origin + window.location.pathname
+  return `${baseUrl}#${shareCode.value}`
+})
+
 // 生成分享代码
 const shareCode = computed(() => {
   try {
@@ -181,18 +218,19 @@ const shareCode = computed(() => {
     const cleanData = {
       title: gameData.title ? gameData.title.slice(0, 100) : '',
       description: gameData.description ? gameData.description.slice(0, 200) : '',
+      creator: gameData.creator ? gameData.creator.slice(0, 50) : '',  // 添加creator字段
       cells: gameData.cells.map(cell => cell ? cell.slice(0, 50) : '')
     }
 
     // 转换为 JSON 字符串
     const jsonStr = JSON.stringify(cleanData)
-    
+
     // 使用 pako 压缩
     const compressed = pako.deflate(jsonStr)
-    
+
     // 转换为 base64 字符串
     const base64 = btoa(String.fromCharCode.apply(null, compressed))
-    
+
     // 反转字符串以增加一点混淆
     return base64.split('').reverse().join('')
   } catch (e) {
@@ -204,31 +242,129 @@ const shareCode = computed(() => {
 // 复制成功提示
 const showCopySuccess = ref(false)
 
-// 复制分享代码
+// 复制分享链接
 const copyShareCode = async () => {
+  if (!shareUrl.value) return
+
   try {
-    await navigator.clipboard.writeText(shareCode.value)
+    await navigator.clipboard.writeText(shareUrl.value)
     showCopySuccess.value = true
     setTimeout(() => {
       showCopySuccess.value = false
     }, 2000)
   } catch (e) {
     console.error('复制失败:', e)
+    alert('复制失败，请手动复制')
   }
 }
 
+// 从URL或文本中提取shareCode
+const extractShareCode = (text: string) => {
+  // 如果是完整URL，提取hash部分
+  if (text.includes('#')) {
+    const hashIndex = text.lastIndexOf('#')
+    return text.slice(hashIndex + 1)
+  }
+  // 否则认为整个文本就是shareCode
+  return text
+}
+
+// 导入游戏数据
+const importGame = () => {
+  if (!importText.value) return
+  
+  try {
+    // 提取shareCode
+    const code = extractShareCode(importText.value.trim())
+
+    // 反转字符串
+    const reversed = code.split('').reverse().join('')
+
+    // 解码 base64
+    const binary = atob(reversed)
+    const bytes = new Uint8Array(binary.length)
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i)
+    }
+
+    // 使用 pako 解压缩
+    const decompressed = pako.inflate(bytes, { to: 'string' })
+
+    // 解析 JSON
+    const imported = JSON.parse(decompressed)
+
+    // 重置数据
+    Object.assign(gameData, initialGameData)
+
+    // 更新有效数据
+    gameData.title = imported.title ? imported.title.slice(0, 100) : ''
+    gameData.description = imported.description ? imported.description.slice(0, 200) : ''
+    gameData.creator = imported.creator ? imported.creator.slice(0, 50) : ''
+
+    // 确保 cells 总是有 25 个元素，空值用空字符串填充
+    gameData.cells = (imported.cells || []).slice(0, 25)
+    while (gameData.cells.length < 25) {
+      gameData.cells.push('')
+    }
+
+    importText.value = ''
+    showImportError.value = false  // 导入成功时隐藏错误提示
+  } catch (e) {
+    showImportError.value = true  // 显示错误提示
+    setTimeout(() => {
+      showImportError.value = false  // 3秒后自动隐藏错误提示
+    }, 3000)
+  }
+}
+
+// 添加清空确认的响应式变量
+const showClearConfirmation = ref(false)
+
+// 清空所有数据的方法
+const clearAllData = () => {
+  // 重置游戏数据
+  Object.assign(gameData, initialGameData)
+
+  // 清空本地存储
+  localStorage.removeItem('bingo-game-data')
+
+  // 重置选中状态
+  selectedCells.splice(0, selectedCells.length, ...Array(25).fill(false))
+
+  // 关闭确认弹窗
+  showClearConfirmation.value = false
+
+  // 可选：添加清空成功的提示
+  console.log('已清空所有数据')
+}
+
+// 初始化时检查URL中的shareCode
+const route = useRoute()
+onMounted(() => {
+  const hash = window.location.hash
+  if (hash) {
+    const code = hash.slice(1) // 移除#号
+    if (code) {
+      importText.value = code
+      importGame()
+      // 导入后切换到填表模式
+      mode.value = 'play'
+    }
+  }
+})
+
 // 初始化时加载数据
 onMounted(() => {
-  console.log('组件挂载，当前模式:', mode.value)
   loadSavedData()
 })
 
 // 监听编辑模式下的数据变化，保存到本地存储
-watch([() => gameData.title, () => gameData.description, () => gameData.cells], () => {
+watch([() => gameData.title, () => gameData.description, () => gameData.creator, () => gameData.cells], () => {
   if (mode.value === 'edit') {
     localStorage.setItem('bingo-game-data', JSON.stringify({
       title: gameData.title,
       description: gameData.description,
+      creator: gameData.creator,
       cells: gameData.cells
     }))
   }
@@ -240,7 +376,6 @@ const switchMode = async (newMode: 'edit' | 'play') => {
 
   // 如果已经是当前模式，强制重新加载
   if (newMode === mode.value) {
-    console.log('强制重新加载数据')
     // 使用 setTimeout 代替 nextTick，避免可能的渲染问题
     await new Promise(resolve => setTimeout(resolve, 0))
   }
@@ -252,10 +387,8 @@ const switchMode = async (newMode: 'edit' | 'play') => {
     // 切换到填表模式时重置所有数据
     Object.assign(gameData, initialGameData)
     selectedCells.fill(false)
-    console.log('切换到填表模式，重置数据')
   } else {
     // 切换到编辑模式时立即加载保存的数据
-    console.log('切换到编辑模式，加载保存的数据')
     loadSavedData()
   }
 
@@ -265,7 +398,6 @@ const switchMode = async (newMode: 'edit' | 'play') => {
 
 // 开始编辑
 const startEditing = (field: string) => {
-  console.log(`开始编辑: ${field}`)
 
   // 强制设置为编辑模式
   mode.value = 'edit'
@@ -277,24 +409,19 @@ const startEditing = (field: string) => {
 
     if (field === 'title') {
       elementToFocus = titleInput.value
-      console.log('标题输入框:', elementToFocus)
     } else if (field === 'description') {
       elementToFocus = descriptionInput.value
-      console.log('描述输入框:', elementToFocus)
     } else if (field.startsWith('cell-')) {
       const index = parseInt(field.replace('cell-', ''))
-      console.log('尝试聚焦单元格:', index)
-      console.log('cellInputs 数组长度:', cellInputs.value.length)
-      console.log('cellInputs:', cellInputs.value.map(el => el ? '有元素' : '空'))
 
       elementToFocus = cellInputs.value[index] || null
-      console.log(`单元格 ${index} 输入框:`, elementToFocus)
+    } else if (field === 'creator') {
+      elementToFocus = creatorInput.value
     }
 
     if (elementToFocus) {
       elementToFocus.focus()
       elementToFocus.select() // 额外添加选中效果
-      console.log(`成功聚焦元素: ${field}`)
     } else {
       console.error(`未找到要聚焦的元素: ${field}`)
     }
@@ -321,72 +448,6 @@ const finishEditing = (field: string) => {
     editingField.value = null
   }
 }
-
-// 导入游戏数据
-const importGame = () => {
-  console.log('开始导入数据，导入文本:', importText.value)
-
-  try {
-    // 反转字符串
-    const reversed = importText.value.split('').reverse().join('')
-    console.log('逆序后的文本:', reversed)
-
-    // 解码 base64
-    const binary = atob(reversed)
-    const bytes = new Uint8Array(binary.length)
-    for (let i = 0; i < binary.length; i++) {
-      bytes[i] = binary.charCodeAt(i)
-    }
-    
-    // 使用 pako 解压缩
-    const decompressed = pako.inflate(bytes, { to: 'string' })
-    console.log('解压后的JSON字符串:', decompressed)
-
-    // 解析 JSON
-    const imported = JSON.parse(decompressed)
-    console.log('解析后的导入数据:', imported)
-
-    // 重置数据
-    Object.assign(gameData, initialGameData)
-
-    // 更新有效数据
-    gameData.title = imported.title ? imported.title.slice(0, 100) : ''
-    gameData.description = imported.description ? imported.description.slice(0, 200) : ''
-
-    // 确保 cells 总是有 25 个元素，空值用空字符串填充
-    gameData.cells = (imported.cells || []).slice(0, 25)
-    while (gameData.cells.length < 25) {
-      gameData.cells.push('')
-    }
-
-    importText.value = ''
-    console.log('导入完成后的游戏数据:', { ...gameData })
-  } catch (e) {
-    console.error('导入失败:', e)
-    alert('导入失败：无效的数据格式')
-  }
-}
-
-// 添加清空确认的响应式变量
-const showClearConfirmation = ref(false)
-
-// 清空所有数据的方法
-const clearAllData = () => {
-  // 重置游戏数据
-  Object.assign(gameData, initialGameData)
-  
-  // 清空本地存储
-  localStorage.removeItem('bingo-game-data')
-  
-  // 重置选中状态
-  selectedCells.splice(0, selectedCells.length, ...Array(25).fill(false))
-  
-  // 关闭确认弹窗
-  showClearConfirmation.value = false
-  
-  // 可选：添加清空成功的提示
-  console.log('已清空所有数据')
-}
 </script>
 
 <style scoped>
@@ -400,7 +461,7 @@ const clearAllData = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .mode-buttons {
@@ -445,10 +506,14 @@ const clearAllData = () => {
   color: #666;
 }
 
+.import-wrapper {
+  min-height: 60px;
+  /* 预留空间，防止切换模式时的布局跳动 */
+}
+
 .import-section {
   display: flex;
   gap: 1rem;
-  margin-bottom: 2rem;
 }
 
 .import-input {
@@ -465,6 +530,13 @@ const clearAllData = () => {
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
+}
+
+.import-error {
+  color: #dc2626;
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  text-align: center;
 }
 
 .bingo-grid {
@@ -604,7 +676,8 @@ const clearAllData = () => {
 }
 
 .copy-feedback {
-  height: 24px; /* 预留固定高度 */
+  height: 24px;
+  /* 预留固定高度 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -725,4 +798,43 @@ const clearAllData = () => {
   font-size: 1rem;
   line-height: 1.5;
 }
+
+.import-wrapper {
+  min-height: 60px;
+  /* 预留空间，防止切换模式时的布局跳动 */
+  /*margin-bottom: 2rem;*/
+}
+
+.import-section {
+  display: flex;
+  gap: 1rem;
+}
+
+.creator-section {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.creator-text {
+  color: #666;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.creator-input {
+  text-align: center;
+  width: auto;
+  min-width: 200px;
+}
+
+.editable.creator-text {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.editable.creator-text:hover {
+  background: #f3f4f6;
+}
+
 </style>
