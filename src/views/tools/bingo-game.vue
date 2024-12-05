@@ -109,6 +109,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch, computed, nextTick } from 'vue'
+import * as pako from 'pako'
 
 // 游戏模式
 const mode = ref<'edit' | 'play'>('edit')
@@ -176,16 +177,23 @@ const loadSavedData = () => {
 // 生成分享代码
 const shareCode = computed(() => {
   try {
-    // 保留空单元格的位置信息
+    // 准备要压缩的数据
     const cleanData = {
       title: gameData.title ? gameData.title.slice(0, 100) : '',
       description: gameData.description ? gameData.description.slice(0, 200) : '',
       cells: gameData.cells.map(cell => cell ? cell.slice(0, 50) : '')
     }
 
-    // 移除所有 undefined 的字段
-    const data = JSON.stringify(cleanData)
-    const base64 = btoa(unescape(encodeURIComponent(data)))
+    // 转换为 JSON 字符串
+    const jsonStr = JSON.stringify(cleanData)
+    
+    // 使用 pako 压缩
+    const compressed = pako.deflate(jsonStr)
+    
+    // 转换为 base64 字符串
+    const base64 = btoa(String.fromCharCode.apply(null, compressed))
+    
+    // 反转字符串以增加一点混淆
     return base64.split('').reverse().join('')
   } catch (e) {
     console.error('生成分享代码时出错:', e)
@@ -319,14 +327,23 @@ const importGame = () => {
   console.log('开始导入数据，导入文本:', importText.value)
 
   try {
+    // 反转字符串
     const reversed = importText.value.split('').reverse().join('')
     console.log('逆序后的文本:', reversed)
 
-    // 使用更安全的解码方法
-    const jsonStr = decodeURIComponent(escape(atob(reversed)))
-    console.log('解码后的JSON字符串:', jsonStr)
+    // 解码 base64
+    const binary = atob(reversed)
+    const bytes = new Uint8Array(binary.length)
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i)
+    }
+    
+    // 使用 pako 解压缩
+    const decompressed = pako.inflate(bytes, { to: 'string' })
+    console.log('解压后的JSON字符串:', decompressed)
 
-    const imported = JSON.parse(jsonStr)
+    // 解析 JSON
+    const imported = JSON.parse(decompressed)
     console.log('解析后的导入数据:', imported)
 
     // 重置数据
