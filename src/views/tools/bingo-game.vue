@@ -371,18 +371,15 @@ const route = useRoute()
 onMounted(() => {
   const hash = window.location.hash
   if (hash) {
-    const code = hash.slice(1) // 移除#号
+    const code = hash.slice(1)
     if (code) {
       importText.value = code
       importGame()
-      // 导入后切换到填表模式
       mode.value = 'play'
+      return  // 如果是play模式就不加载本地存储
     }
   }
-})
-
-// 初始化时加载数据
-onMounted(() => {
+  // 只有在没有hash值时才加载本地存储
   loadSavedData()
 })
 
