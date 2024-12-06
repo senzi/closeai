@@ -1,0 +1,229 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <title>七彩菠萝爆炸鸡</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1a1a1a;
+            overflow: hidden;
+        }
+        canvas {
+            background: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // 创建炸鸡腿的基本形状路径
+        function createChickenPath(x, y, scale) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            
+            // 腿部主体
+            ctx.bezierCurveTo(
+                x - 50 * scale, y - 80 * scale,
+                x + 80 * scale, y - 100 * scale,
+                x + 100 * scale, y + 20 * scale
+            );
+            
+            // 腿部下方
+            ctx.bezierCurveTo(
+                x + 110 * scale, y + 60 * scale,
+                x + 90 * scale, y + 100 * scale,
+                x + 40 * scale, y + 120 * scale
+            );
+            
+            // 腿部收口
+            ctx.bezierCurveTo(
+                x - 20 * scale, y + 140 * scale,
+                x - 40 * scale, y + 80 * scale,
+                x - 30 * scale, y + 40 * scale
+            );
+            
+            ctx.closePath();
+        }
+
+        // 创建菠萝纹理
+        function createPineappleTexture(x, y, scale, time) {
+            const hexSize = 15 * scale;
+            const rows = 12;
+            const cols = 12;
+            
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const px = x - 80 * scale + (col * hexSize * 1.8);
+                    const py = y - 60 * scale + (row * hexSize * 1.6) + (col % 2 ? hexSize * 0.8 : 0);
+                    
+                    // 检查是否在炸鸡形状内
+                    ctx.save();
+                    createChickenPath(x + 35 * scale, y + 30 * scale, scale);
+                    if (ctx.isPointInPath(px, py)) {
+                        drawHexagon(px, py, hexSize, time);
+                    }
+                    ctx.restore();
+                }
+            }
+        }
+
+        // 绘制六边形
+        function drawHexagon(x, y, size, time) {
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (i * Math.PI) / 3;
+                const px = x + size * Math.cos(angle);
+                const py = y + size * Math.sin(angle);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            
+            // 创建渐变填充
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, size);
+            const hue = (time * 2 + x + y) % 360;
+            gradient.addColorStop(0, `hsla(${hue}, 100%, 70%, 0.9)`);
+            gradient.addColorStop(1, `hsla(${hue + 30}, 100%, 50%, 0.8)`);
+            
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        // 绘制炸鸡表面的褶皱纹理
+        function drawChickenTexture(x, y, scale) {
+            ctx.save();
+            createChickenPath(x + 35 * scale, y + 30 * scale, scale);
+            ctx.clip();
+            
+            // 添加随机的褶皱线条
+            for (let i = 0; i < 50; i++) {
+                const px = x - 50 * scale + Math.random() * 200 * scale;
+                const py = y - 50 * scale + Math.random() * 200 * scale;
+                const len = 10 + Math.random() * 20;
+                const angle = Math.random() * Math.PI * 2;
+                
+                ctx.beginPath();
+                ctx.moveTo(px, py);
+                ctx.lineTo(
+                    px + Math.cos(angle) * len,
+                    py + Math.sin(angle) * len
+                );
+                ctx.strokeStyle = 'rgba(139, 69, 19, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        // 绘制爆炸效果
+        function drawExplosion(x, y, scale, time) {
+            const rays = 16;
+            for (let i = 0; i < rays; i++) {
+                const angle = (i * Math.PI * 2) / rays + time * 0.002;
+                const length = (100 + Math.sin(time * 0.01 + i) * 30) * scale;
+                
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(
+                    x + Math.cos(angle) * length,
+                    y + Math.sin(angle) * length
+                );
+                
+                const gradient = ctx.createLinearGradient(
+                    x, y,
+                    x + Math.cos(angle) * length,
+                    y + Math.sin(angle) * length
+                );
+                gradient.addColorStop(0, `hsla(${(time + i * 20) % 360}, 100%, 50%, 0.8)`);
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 3 * scale;
+                ctx.stroke();
+            }
+        }
+
+        // 绘制星星
+        function drawStar(x, y, size, time) {
+            ctx.beginPath();
+            for (let i = 0; i < 5; i++) {
+                const angle = (i * Math.PI * 4) / 5 + time * 0.005;
+                const px = x + Math.cos(angle) * size;
+                const py = y + Math.sin(angle) * size;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fill();
+        }
+
+        let time = 0;
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const scale = Math.min(canvas.width, canvas.height) / 800;
+
+            // 绘制背景星星
+            for (let i = 0; i < 20; i++) {
+                const x = centerX + Math.cos(time * 0.001 + i) * 200 * scale;
+                const y = centerY + Math.sin(time * 0.001 + i) * 200 * scale;
+                drawStar(x, y, 2 * scale, time);
+            }
+
+            // 绘制爆炸效果
+            drawExplosion(centerX, centerY, scale, time);
+
+            // 绘制炸鸡基本形状
+            ctx.save();
+            createChickenPath(centerX + 35 * scale, centerY + 30 * scale, scale);
+            ctx.fillStyle = '#f4a460';
+            ctx.fill();
+            ctx.restore();
+
+            // 绘制炸鸡表面纹理
+            drawChickenTexture(centerX, centerY, scale);
+
+            // 绘制菠萝纹理
+            createPineappleTexture(centerX, centerY, scale, time);
+
+            time++;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // 鼠标交互效果
+        canvas.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            ctx.beginPath();
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, 100);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = gradient;
+            ctx.arc(x, y, 100, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    </script>
+
+
+</body></html>
