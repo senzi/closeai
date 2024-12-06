@@ -73,6 +73,13 @@ const tools = [
   margin: 0 auto;
 }
 
+@media screen and (max-width: 768px) {
+  .tools-container {
+    padding: 0;
+    margin: 0;
+  }
+}
+
 .tools-container h1 {
   font-size: 2.5rem;
   margin-bottom: 2rem;
