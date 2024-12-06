@@ -40,6 +40,12 @@ const isToolRoute = computed(() => {
 
 const tools = [
   {
+    name: '汉字编码工具',
+    path: 'chinese-encoder',
+    description: '支持汉字的自定义编码算法，用于发送"加密"微博',
+    available: true
+  },
+  {
     name: 'AI 图像生成器',
     path: 'image-generator',
     description: '使用 AI 技术生成各种创意图像',
