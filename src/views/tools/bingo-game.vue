@@ -933,4 +933,34 @@ const completedLineIndices = computed(() => {
   background: #f3f4f6;
 }
 
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  .bingo-container {
+    transform: scale(0.8);
+    transform-origin: top center;
+    margin: 0 auto;
+    width: 125%; /* 补偿缩放导致的宽度减少 */
+    margin-left: -12.5%; /* 补偿增加的宽度，使其居中 */
+  }
+
+  .tool-header {
+    width: 100%;
+  }
+
+  .clear-dialog {
+    transform: scale(1); /* 重置弹窗的缩放，保持原始大小 */
+    width: 90vw;
+    margin: 0 auto;
+  }
+}
+
+/* 针对更小的屏幕使用更大的缩放比例 */
+@media screen and (max-width: 480px) {
+  .bingo-container {
+    transform: scale(0.7);
+    width: 143%; /* 1/0.7 ≈ 1.43 */
+    margin-left: -21.5%;
+  }
+}
+
 </style>
