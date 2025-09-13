@@ -113,6 +113,60 @@ button:focus-visible {
   text-align: center;
 }
 
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  #app {
+    padding: 1rem;
+  }
+  
+  body {
+    min-width: 280px;
+  }
+  
+  h1 {
+    font-size: 2.5em;
+    line-height: 1.2;
+  }
+  
+  button {
+    padding: 0.8em 1.5em;
+    font-size: 0.9em;
+  }
+  
+  .btn-lg {
+    padding: 1em 2em !important;
+    font-size: 1.1em !important;
+  }
+  
+  .card {
+    padding: 1.5em;
+  }
+}
+
+@media (max-width: 480px) {
+  #app {
+    padding: 0.5rem;
+  }
+  
+  h1 {
+    font-size: 2em;
+  }
+  
+  button {
+    padding: 0.7em 1.2em;
+    font-size: 0.85em;
+  }
+  
+  .btn-lg {
+    padding: 0.9em 1.8em !important;
+    font-size: 1em !important;
+  }
+  
+  .card {
+    padding: 1em;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

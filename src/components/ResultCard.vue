@@ -236,7 +236,7 @@ const copyShareText = async () => {
   background: #f5f5f5;
   font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   margin: 0;
-  padding: 40px;
+  padding: 20px;
   color: #222;
 }
 
@@ -246,10 +246,10 @@ const copyShareText = async () => {
 }
 
 .section-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   color: #222;
 }
 
@@ -258,26 +258,45 @@ const copyShareText = async () => {
   max-width: 720px;
   margin: 0 auto;
   border-radius: 20px;
-  padding: 40px;
+  padding: 20px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Mobile responsive styles */
+@media (min-width: 768px) {
+  .result-section {
+    padding: 40px;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .card {
+    padding: 40px;
+  }
 }
 
 .header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 32px;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: center;
 }
 
 .header-title {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
+  text-align: center;
 }
 
 .header-sub {
-  font-size: 13px;
+  font-size: 12px;
   color: #666;
   margin-top: 4px;
+  text-align: center;
 }
 
 .badge {
@@ -294,13 +313,38 @@ const copyShareText = async () => {
   line-height: 1;
 }
 
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+  }
+  
+  .header-title {
+    font-size: 24px;
+    text-align: left;
+  }
+  
+  .header-sub {
+    font-size: 13px;
+    text-align: left;
+  }
+  
+  .badge {
+    font-size: 14px;
+    padding: 8px 16px;
+    min-height: 32px;
+  }
+}
+
 .closeness {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .closeness .value {
-  font-size: 80px;
+  font-size: 60px;
   font-weight: 900;
   color: #000;
   line-height: 1;
@@ -308,13 +352,33 @@ const copyShareText = async () => {
 
 .closeness .label {
   color: #555;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .closeness p {
   margin-top: 8px;
-  font-size: 15px;
+  font-size: 14px;
   color: #666;
+  padding: 0 10px;
+}
+
+@media (min-width: 768px) {
+  .closeness {
+    margin-bottom: 28px;
+  }
+  
+  .closeness .value {
+    font-size: 80px;
+  }
+  
+  .closeness .label {
+    font-size: 14px;
+  }
+  
+  .closeness p {
+    font-size: 15px;
+    padding: 0;
+  }
 }
 
 h4 {
@@ -353,21 +417,21 @@ h4 {
 .bar-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .bar-label {
-  font-size: 14px;
-  flex: 0 0 120px;
+  font-size: 12px;
+  flex: 0 0 80px;
   color: #555;
 }
 
 .bar-track {
   flex: 1;
-  height: 10px;
+  height: 8px;
   background: #eee;
-  border-radius: 6px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
@@ -375,16 +439,42 @@ h4 {
   height: 100%;
   background: #000;
   width: 0%;
-  border-radius: 6px;
+  border-radius: 4px;
   transition: width 0.6s ease;
 }
 
 .bar-value {
-  flex: 0 0 50px;
+  flex: 0 0 40px;
   text-align: right;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   color: #000;
+}
+
+@media (min-width: 768px) {
+  .bar-row {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .bar-label {
+    font-size: 14px;
+    flex: 0 0 120px;
+  }
+  
+  .bar-track {
+    height: 10px;
+    border-radius: 6px;
+  }
+  
+  .bar-fill {
+    border-radius: 6px;
+  }
+  
+  .bar-value {
+    flex: 0 0 50px;
+    font-size: 14px;
+  }
 }
 
 .footer {
@@ -408,10 +498,10 @@ h4 {
 
 .action-buttons {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .btn {
@@ -419,11 +509,27 @@ h4 {
   color: #fff;
   border: none;
   border-radius: 12px;
-  padding: 12px 24px;
-  font-size: 16px;
+  padding: 10px 20px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .action-buttons {
+    margin-top: 2rem;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    width: auto;
+  }
 }
 
 .btn:hover {

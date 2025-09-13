@@ -4,6 +4,7 @@ import HeroSection from './components/HeroSection.vue'
 import NudgeSection from './components/NudgeSection.vue'
 import QuestionnaireSection from './components/QuestionnaireSection.vue'
 import ResultCard from './components/ResultCard.vue'
+import FooterSection from './components/FooterSection.vue'
 import { saveUserData, loadUserData, decodeUserDataFromURL } from './utils/storage.js'
 
 // User responses data
@@ -120,6 +121,7 @@ const calculateArchetype = (data) => {
       :userData="userData"
       :archetype="archetype"
     />
+    <FooterSection />
   </div>
 </template>
 

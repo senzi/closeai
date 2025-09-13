@@ -1,0 +1,13 @@
+<!-- favicon-brackets-dot-circle.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 背景黑圆 -->
+  <circle cx="32" cy="32" r="30" fill="#000"/>
+  <!-- 左括号 -->
+  <path d="M22 44 L10 32 L22 20" 
+        stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- 右括号 -->
+  <path d="M42 20 L54 32 L42 44" 
+        stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- 中心点 -->
+  <circle cx="32" cy="32" r="5" fill="#fff"/>
+</svg>

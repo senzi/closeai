@@ -1,13 +1,13 @@
 <template>
-  <section class="py-16 px-4 bg-base-100">
+  <section class="py-8 md:py-16 px-4 bg-base-100">
     <div class="container mx-auto max-w-4xl">
-      <h2 class="text-3xl font-bold text-center mb-12 text-base-content">
+      <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-base-content">
         问卷调查
       </h2>
 
       <!-- Usage Scenarios -->
-      <div class="mb-12">
-        <h3 class="text-xl font-semibold mb-6 text-base-content">
+      <div class="mb-8 md:mb-12">
+        <h3 class="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-base-content">
           1. 你在这些场景里用 AI 的程度有多少？
         </h3>
         <div class="space-y-6">
@@ -29,12 +29,12 @@
       </div>
 
       <!-- Model Preferences -->
-      <div class="mb-12">
-        <h3 class="text-xl font-semibold mb-6 text-base-content">
+      <div class="mb-8 md:mb-12">
+        <h3 class="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-base-content">
           2. 你最常使用/最喜欢的模型或平台是？
         </h3>
         <p class="text-sm text-base-content/60 mb-4">最多选择 3 个</p>
-        <div class="flex flex-wrap gap-2 mb-4">
+        <div class="flex flex-wrap gap-2 mb-4 justify-center sm:justify-start">
           <button
             v-for="model in availableModels"
             :key="model.id"
@@ -69,8 +69,8 @@
       </div>
 
       <!-- Dimensions -->
-      <div class="mb-12">
-        <h3 class="text-xl font-semibold mb-6 text-base-content">
+      <div class="mb-8 md:mb-12">
+        <h3 class="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-base-content">
           3. 请评估你在以下维度上的情况
         </h3>
         <div class="space-y-6">
@@ -99,7 +99,7 @@
       <div class="text-center">
         <button
           @click="completeQuestionnaire"
-          class="btn btn-primary btn-lg px-12 py-3 text-lg font-medium"
+          class="btn btn-primary btn-lg px-8 md:px-12 py-3 text-base md:text-lg font-medium w-full sm:w-auto"
         >
           生成我的亲密画像
         </button>
