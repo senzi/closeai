@@ -44,14 +44,62 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s ease;
 }
 button:hover {
   border-color: #646cff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(100, 108, 255, 0.3);
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Enhanced DaisyUI button styles for better visibility */
+.btn-primary {
+  background: hsl(var(--p)) !important;
+  color: hsl(var(--pc)) !important;
+  border: 2px solid hsl(var(--p)) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-primary:hover {
+  background: hsl(var(--p) / 0.9) !important;
+  border-color: hsl(var(--p) / 0.9) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-outline {
+  background: transparent !important;
+  color: hsl(var(--p)) !important;
+  border: 2px solid hsl(var(--p)) !important;
+  font-weight: 600 !important;
+}
+
+.btn-outline:hover {
+  background: hsl(var(--p)) !important;
+  color: hsl(var(--pc)) !important;
+  border-color: hsl(var(--p)) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-secondary {
+  background: hsl(var(--s)) !important;
+  color: hsl(var(--sc)) !important;
+  border: 2px solid hsl(var(--s)) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-secondary:hover {
+  background: hsl(var(--s) / 0.9) !important;
+  border-color: hsl(var(--s) / 0.9) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
 .card {

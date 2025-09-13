@@ -10,16 +10,6 @@
         </p>
       </div>
 
-      <div class="divider my-8"></div>
-
-      <div>
-        <h3 class="text-2xl font-medium mb-4 text-base-content">
-          Is being "close" to AI good or bad?
-        </h3>
-        <p class="text-lg text-base-content/70 leading-relaxed">
-          Too close, or too distant? Answer a few questions and see your profile.
-        </p>
-      </div>
     </div>
   </section>
 </template>

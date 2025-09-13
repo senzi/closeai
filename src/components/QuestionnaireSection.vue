@@ -39,11 +39,14 @@
             v-for="model in availableModels"
             :key="model.id"
             @click="toggleModel(model.id)"
+            :disabled="!userData.preferredModels.includes(model.id) && userData.preferredModels.length >= 3"
             :class="[
-              'badge badge-lg cursor-pointer transition-all',
+              'badge badge-lg cursor-pointer transition-all duration-200',
               userData.preferredModels.includes(model.id)
-                ? 'badge-primary text-primary-content'
-                : 'badge-outline hover:badge-primary/20'
+                ? 'badge-selected'
+                : userData.preferredModels.length >= 3 
+                  ? 'badge-unselected disabled'
+                  : 'badge-unselected'
             ]"
           >
             {{ model.name }}
@@ -91,13 +94,6 @@
         </div>
       </div>
 
-      <!-- Real-time Archetype Preview -->
-      <div v-if="currentArchetype" class="alert alert-info mb-8">
-        <div>
-          <h4 class="font-bold">{{ currentArchetype.name }}</h4>
-          <p>{{ currentArchetype.description }}</p>
-        </div>
-      </div>
 
       <!-- Complete Button -->
       <div class="text-center">
@@ -224,12 +220,96 @@ const completeQuestionnaire = () => {
 </script>
 
 <style scoped>
+/* Enhanced range slider styles */
 .range {
-  height: 6px;
+  height: 16px;
+  border-radius: 8px;
+  background: hsl(var(--bc) / 0.2);
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+}
+
+.range::-webkit-slider-track {
+  height: 16px;
+  border-radius: 8px;
+  background: linear-gradient(to right, #3b82f6 0%, #3b82f6 var(--range-shdw), #e5e7eb var(--range-shdw), #e5e7eb 100%);
 }
 
 .range::-webkit-slider-thumb {
-  height: 20px;
-  width: 20px;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 3px solid white;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  z-index: 1;
+}
+
+.range::-moz-range-track {
+  height: 16px;
+  border-radius: 8px;
+  background: #e5e7eb;
+  border: none;
+}
+
+.range::-moz-range-progress {
+  height: 16px;
+  border-radius: 8px;
+  background: #3b82f6;
+}
+
+.range::-moz-range-thumb {
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 3px solid white;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  border: none;
+}
+
+/* Enhanced badge styles for better multi-selection visibility */
+.badge-selected {
+  background: #3b82f6 !important;
+  color: white !important;
+  border: 3px solid #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  transform: scale(1.05) !important;
+  font-weight: 700 !important;
+}
+
+.badge-unselected {
+  background: hsl(var(--b1)) !important;
+  color: hsl(var(--bc) / 0.7) !important;
+  border: 2px solid hsl(var(--bc) / 0.2) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  font-weight: 500 !important;
+}
+
+.badge-unselected:hover {
+  background: hsl(var(--p) / 0.1) !important;
+  border-color: hsl(var(--p) / 0.6) !important;
+  color: hsl(var(--p)) !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Disabled state for when 3 models are selected */
+.badge-unselected.disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+.badge-unselected.disabled:hover {
+  transform: none !important;
+  background: hsl(var(--b1)) !important;
+  border-color: hsl(var(--bc) / 0.2) !important;
+  color: hsl(var(--bc) / 0.7) !important;
 }
 </style>

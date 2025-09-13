@@ -1,153 +1,121 @@
 <template>
-  <section class="py-16 px-4 bg-base-200">
-    <div class="container mx-auto max-w-4xl">
-      <h2 class="text-3xl font-bold text-center mb-12 text-base-content">
+  <section class="result-section">
+    <div class="container">
+      <h2 class="section-title">
         你的亲密画像
       </h2>
 
       <!-- Result Card -->
-      <div id="result-card" class="card bg-base-100 shadow-soft-xl rounded-2xl p-8 max-w-2xl mx-auto">
-        <!-- Main Closeness Percentage -->
-        <div class="text-center mb-8">
-          <div class="text-8xl font-black text-primary mb-2">
-            {{ userData.dimensions.closeness }}%
+      <div id="result-card" class="card">
+        <!-- Header -->
+        <div class="header">
+          <div>
+            <div class="header-title">你的 AI 亲密画像</div>
+            <div class="header-sub">基于使用场景与三维度评估的轻量画像</div>
           </div>
-          <div class="text-lg text-base-content/70">Closeness</div>
+          <div class="badge">{{ archetype.name }}</div>
         </div>
 
-        <!-- Archetype Badge -->
-        <div class="text-center mb-8">
-          <div class="badge badge-primary badge-lg px-4 py-2 text-lg font-semibold">
-            {{ archetype.name }}
-          </div>
-          <p class="text-base-content/80 mt-3 leading-relaxed">
-            {{ archetype.description }}
-          </p>
+        <!-- Closeness -->
+        <div class="closeness">
+          <div class="value">{{ userData.dimensions.closeness }}%</div>
+          <div class="label">Closeness</div>
+          <p>{{ archetype.description }}</p>
         </div>
 
         <!-- Preferred Models -->
-        <div class="mb-8">
-          <h4 class="text-sm font-semibold text-base-content/60 mb-3 uppercase tracking-wide">
-            偏好模型
-          </h4>
-          <div class="flex flex-wrap gap-2">
-            <span
+        <div class="models">
+          <h4>偏好模型</h4>
+          <div class="tags">
+            <div
               v-for="modelId in userData.preferredModels"
               :key="modelId"
-              class="badge badge-outline badge-primary"
+              class="tag"
             >
               {{ getModelName(modelId) }}
-            </span>
-            <span
+            </div>
+            <div
               v-if="userData.customModel"
-              class="badge badge-outline badge-primary"
+              class="tag"
             >
               其他: {{ userData.customModel }}
-            </span>
+            </div>
           </div>
         </div>
 
-        <!-- Top 3 Usage Scenarios -->
-        <div class="mb-8">
-          <h4 class="text-sm font-semibold text-base-content/60 mb-3 uppercase tracking-wide">
-            使用场景 TOP3
-          </h4>
-          <div class="space-y-2">
-            <div
-              v-for="scenario in topScenarios"
-              :key="scenario.key"
-              class="flex items-center gap-3"
-            >
-              <span class="text-sm text-base-content/80 min-w-0 flex-1">
-                {{ scenario.label }}
-              </span>
-              <div class="flex-1 bg-base-300 rounded-full h-2">
-                <div
-                  class="bg-primary h-2 rounded-full transition-all duration-500"
-                  :style="{ width: scenario.value + '%' }"
-                ></div>
-              </div>
-              <span class="text-sm font-medium text-primary min-w-[3rem] text-right">
-                {{ scenario.value }}%
-              </span>
+        <!-- Usage Top3 -->
+        <div class="usage">
+          <h4>使用场景 TOP3</h4>
+          <div
+            v-for="scenario in topScenarios"
+            :key="scenario.key"
+            class="bar-row"
+          >
+            <div class="bar-label">{{ scenario.label }}</div>
+            <div class="bar-track">
+              <div class="bar-fill" :style="{ width: scenario.value + '%' }"></div>
             </div>
+            <div class="bar-value">{{ scenario.value }}%</div>
           </div>
         </div>
 
         <!-- Dimensions -->
-        <div class="mb-8">
-          <h4 class="text-sm font-semibold text-base-content/60 mb-3 uppercase tracking-wide">
-            三维度评估
-          </h4>
-          <div class="space-y-3">
-            <div class="flex items-center gap-3">
-              <span class="text-sm text-base-content/80 min-w-0 flex-1">Closeness</span>
-              <div class="flex-1 bg-base-300 rounded-full h-2">
-                <div
-                  class="bg-primary h-2 rounded-full"
-                  :style="{ width: userData.dimensions.closeness + '%' }"
-                ></div>
-              </div>
-              <span class="text-sm font-medium text-primary min-w-[3rem] text-right">
-                {{ userData.dimensions.closeness }}%
-              </span>
+        <div class="dimensions">
+          <h4>三维度评估</h4>
+          <div class="bar-row">
+            <div class="bar-label">Closeness</div>
+            <div class="bar-track">
+              <div class="bar-fill" :style="{ width: userData.dimensions.closeness + '%' }"></div>
             </div>
-            <div class="flex items-center gap-3">
-              <span class="text-sm text-base-content/80 min-w-0 flex-1">Dependence</span>
-              <div class="flex-1 bg-base-300 rounded-full h-2">
-                <div
-                  class="bg-primary h-2 rounded-full"
-                  :style="{ width: userData.dimensions.dependence + '%' }"
-                ></div>
-              </div>
-              <span class="text-sm font-medium text-primary min-w-[3rem] text-right">
-                {{ userData.dimensions.dependence }}%
-              </span>
+            <div class="bar-value">{{ userData.dimensions.closeness }}%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Dependence</div>
+            <div class="bar-track">
+              <div class="bar-fill" :style="{ width: userData.dimensions.dependence + '%' }"></div>
             </div>
-            <div class="flex items-center gap-3">
-              <span class="text-sm text-base-content/80 min-w-0 flex-1">Skepticism</span>
-              <div class="flex-1 bg-base-300 rounded-full h-2">
-                <div
-                  class="bg-primary h-2 rounded-full"
-                  :style="{ width: userData.dimensions.skepticism + '%' }"
-                ></div>
-              </div>
-              <span class="text-sm font-medium text-primary min-w-[3rem] text-right">
-                {{ userData.dimensions.skepticism }}%
-              </span>
+            <div class="bar-value">{{ userData.dimensions.dependence }}%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Skepticism</div>
+            <div class="bar-track">
+              <div class="bar-fill" :style="{ width: userData.dimensions.skepticism + '%' }"></div>
             </div>
+            <div class="bar-value">{{ userData.dimensions.skepticism }}%</div>
           </div>
         </div>
 
         <!-- Footer -->
-        <div class="text-center border-t border-base-300 pt-6 mt-8">
-          <div class="text-lg font-bold text-primary mb-1">closeai.moe</div>
-          <div class="text-sm text-base-content/60">Think with care · Share with style</div>
+        <div class="footer">
+          <div class="brand">closeai.moe</div>
+          <div class="slogan">Think with care · Share with style</div>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="text-center mt-8 space-x-4">
+      <div class="action-buttons">
         <button
           @click="exportCard"
-          class="btn btn-primary btn-lg"
+          class="btn btn-primary"
           :disabled="isExporting"
         >
-          <span v-if="isExporting" class="loading loading-spinner loading-sm"></span>
+          <span v-if="isExporting" class="loading-spinner"></span>
           下载图片
         </button>
         <button
           @click="copyShareText"
-          class="btn btn-outline btn-lg"
+          class="btn btn-primary"
         >
           复制分享文本
         </button>
-        <button
-          @click="copyShareURL"
-          class="btn btn-secondary btn-lg"
-        >
-          复制分享链接
-        </button>
+      </div>
+
+      <!-- Inline Notification -->
+      <div v-if="showNotification" class="notification">
+        <svg xmlns="http://www.w3.org/2000/svg" class="notification-icon" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>{{ notificationMessage }}</span>
       </div>
     </div>
   </section>
@@ -170,6 +138,8 @@ const props = defineProps({
 })
 
 const isExporting = ref(false)
+const showNotification = ref(false)
+const notificationMessage = ref('')
 
 const modelNames = {
   openai: 'OpenAI GPT',
@@ -233,12 +203,20 @@ const exportCard = async () => {
   }
 }
 
+const showInlineNotification = (message) => {
+  notificationMessage.value = message
+  showNotification.value = true
+  setTimeout(() => {
+    showNotification.value = false
+  }, 3000)
+}
+
 const copyShareText = async () => {
   const shareText = `我的AI亲密度是 ${props.userData.dimensions.closeness}%！\n\n我的画像：${props.archetype.name}\n${props.archetype.description}\n\n快来测测你的吧：https://closeai.moe`
 
   try {
     await navigator.clipboard.writeText(shareText)
-    alert('分享文本已复制到剪贴板！')
+    showInlineNotification('分享文本已复制到剪贴板！')
   } catch (error) {
     console.error('Copy failed:', error)
     // Fallback for older browsers
@@ -248,32 +226,249 @@ const copyShareText = async () => {
     textArea.select()
     document.execCommand('copy')
     document.body.removeChild(textArea)
-    alert('分享文本已复制到剪贴板！')
-  }
-}
-
-const copyShareURL = async () => {
-  const shareURL = generateShareURL(props.userData)
-
-  try {
-    await navigator.clipboard.writeText(shareURL)
-    alert('分享链接已复制到剪贴板！')
-  } catch (error) {
-    console.error('Copy failed:', error)
-    // Fallback for older browsers
-    const textArea = document.createElement('textarea')
-    textArea.value = shareURL
-    document.body.appendChild(textArea)
-    textArea.select()
-    document.execCommand('copy')
-    document.body.removeChild(textArea)
-    alert('分享链接已复制到剪贴板！')
+    showInlineNotification('分享文本已复制到剪贴板！')
   }
 }
 </script>
 
 <style scoped>
-.shadow-soft-xl {
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+.result-section {
+  background: #f5f5f5;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  margin: 0;
+  padding: 40px;
+  color: #222;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #222;
+}
+
+.card {
+  background: #fff;
+  max-width: 720px;
+  margin: 0 auto;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.header-sub {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #333;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 8px 16px;
+  min-height: 32px;
+  line-height: 1;
+}
+
+.closeness {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.closeness .value {
+  font-size: 80px;
+  font-weight: 900;
+  color: #000;
+  line-height: 1;
+}
+
+.closeness .label {
+  color: #555;
+  font-size: 14px;
+}
+
+.closeness p {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #666;
+}
+
+h4 {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.models {
+  margin-bottom: 28px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.tag {
+  border: 1px solid #ccc;
+  border-radius: 14px;
+  padding: 4px 12px;
+  font-size: 13px;
+  color: #333;
+}
+
+.usage,
+.dimensions {
+  margin-bottom: 28px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.bar-label {
+  font-size: 14px;
+  flex: 0 0 120px;
+  color: #555;
+}
+
+.bar-track {
+  flex: 1;
+  height: 10px;
+  background: #eee;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #000;
+  width: 0%;
+  border-radius: 6px;
+  transition: width 0.6s ease;
+}
+
+.bar-value {
+  flex: 0 0 50px;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+
+.footer {
+  border-top: 1px solid #eee;
+  text-align: center;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.footer .brand {
+  font-size: 18px;
+  font-weight: 800;
+  color: #000;
+}
+
+.footer .slogan {
+  font-size: 13px;
+  color: #777;
+  margin-top: 4px;
+}
+
+.action-buttons {
+  text-align: center;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn {
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background: #555;
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin: 1rem auto 0;
+  max-width: 400px;
+}
+
+.notification-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
 }
 </style>
