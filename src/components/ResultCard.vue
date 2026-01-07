@@ -187,8 +187,12 @@ const exportCard = async () => {
       throw new Error('Result card not found')
     }
 
-    // Use the basic usage pattern from snapdom docs
-    const result = await snapdom(card)
+    const result = await snapdom(card, {
+      width: 720,
+      scale: 2,
+      dpr: 1,
+      backgroundColor: '#fff'
+    })
     const img = await result.toPng()
     
     const link = document.createElement('a')
