@@ -14,13 +14,13 @@
           <div v-for="(scenario, key) in scenarios" :key="key" class="form-control">
             <label class="label">
               <span class="label-text text-base font-medium">{{ scenario.label }}</span>
-              <span class="label-text-alt text-primary font-bold">{{ userData.usageScenarios[key] }}%</span>
+              <span class="label-text-alt text-primary font-bold">{{ localUsageScenarios[key] }}%</span>
             </label>
             <input
               type="range"
               min="0"
               max="100"
-              :value="userData.usageScenarios[key]"
+              :value="localUsageScenarios[key]"
               @input="updateUsageScenario(key, $event)"
               class="range range-primary"
             />
@@ -77,13 +77,13 @@
           <div v-for="(dimension, key) in dimensions" :key="key" class="form-control">
             <label class="label">
               <span class="label-text text-base font-medium">{{ dimension.label }}</span>
-              <span class="label-text-alt text-primary font-bold">{{ userData.dimensions[key] }}%</span>
+              <span class="label-text-alt text-primary font-bold">{{ localDimensions[key] }}%</span>
             </label>
             <input
               type="range"
               min="0"
               max="100"
-              :value="userData.dimensions[key]"
+              :value="localDimensions[key]"
               @input="updateDimension(key, $event)"
               class="range range-primary"
             />
@@ -109,7 +109,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   userData: {
@@ -119,6 +119,19 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['complete'])
+
+// Local state for smooth slider interaction
+const localUsageScenarios = ref({ ...props.userData.usageScenarios })
+const localDimensions = ref({ ...props.userData.dimensions })
+
+// Sync local state when props change externally
+watch(() => props.userData.usageScenarios, (newVal) => {
+  localUsageScenarios.value = { ...newVal }
+}, { deep: true })
+
+watch(() => props.userData.dimensions, (newVal) => {
+  localDimensions.value = { ...newVal }
+}, { deep: true })
 
 const scenarios = {
   programming: { label: '编程 / 技术' },
@@ -157,6 +170,7 @@ const dimensions = {
 }
 
 const currentArchetype = ref(null)
+let syncTimeout = null
 
 const calculateArchetype = () => {
   const { dependence, skepticism } = props.userData.dimensions
@@ -188,12 +202,22 @@ const calculateArchetype = () => {
   return { name: archetypeName, description }
 }
 
+const syncToParent = () => {
+  if (syncTimeout) clearTimeout(syncTimeout)
+  syncTimeout = setTimeout(() => {
+    Object.assign(props.userData.usageScenarios, localUsageScenarios.value)
+    Object.assign(props.userData.dimensions, localDimensions.value)
+  }, 150)
+}
+
 const updateUsageScenario = (key, event) => {
-  props.userData.usageScenarios[key] = parseInt(event.target.value)
+  localUsageScenarios.value[key] = parseInt(event.target.value)
+  syncToParent()
 }
 
 const updateDimension = (key, event) => {
-  props.userData.dimensions[key] = parseInt(event.target.value)
+  localDimensions.value[key] = parseInt(event.target.value)
+  syncToParent()
 }
 
 const toggleModel = (modelId) => {
@@ -220,7 +244,6 @@ const completeQuestionnaire = () => {
 </script>
 
 <style scoped>
-/* Enhanced range slider styles */
 .range {
   height: 16px;
   border-radius: 8px;
@@ -228,6 +251,9 @@ const completeQuestionnaire = () => {
   appearance: none;
   -webkit-appearance: none;
   outline: none;
+  touch-action: pan-x;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .range::-webkit-slider-track {

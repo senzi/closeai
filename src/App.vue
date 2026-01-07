@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, onUnmounted } from 'vue'
 import HeroSection from './components/HeroSection.vue'
 import NudgeSection from './components/NudgeSection.vue'
 import QuestionnaireSection from './components/QuestionnaireSection.vue'
@@ -27,6 +27,18 @@ const userData = ref({
 
 const showResult = ref(false)
 const archetype = ref(null)
+let saveTimeout = null
+
+const debouncedSave = (data) => {
+  if (saveTimeout) clearTimeout(saveTimeout)
+  saveTimeout = setTimeout(() => {
+    saveUserData(data)
+  }, 300)
+}
+
+onUnmounted(() => {
+  if (saveTimeout) clearTimeout(saveTimeout)
+})
 
 // Load data on mount
 onMounted(() => {
@@ -54,9 +66,9 @@ onMounted(() => {
   }
 })
 
-// Save data whenever it changes
+// Save data with debounce
 watch(userData, (newData) => {
-  saveUserData(newData)
+  debouncedSave(newData)
 }, { deep: true })
 
 const startQuestionnaire = () => {
