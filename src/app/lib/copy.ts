@@ -32,7 +32,7 @@ export const CLOSINGS = [
   '测完告诉我你是什么类型 → closeai.moe',
   '敢不敢晒出你的编码？closeai.moe',
   '一分钟，四个字母 → closeai.moe',
-  '链接在这，自测自觉 → closeai.moe #closeai',
+  '链接在这，自测自觉 → closeai.moe',
   '你的四个字母是什么？→ closeai.moe',
   '别让你的数据白交 → closeai.moe',
   '测完你会回来谢我（或者骂我）→ closeai.moe',
