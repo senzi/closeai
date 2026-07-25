@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T02:55:17.281Z",
+  "generatedAt": "2026-07-25T03:02:52.585Z",
   "source": "openrouter.ai/api/v1/models + @lobehub/icons-static-png",
   "maxSelectable": 3,
   "providers": [
@@ -57,6 +57,14 @@
       "icon": "kimi",
       "iconAvailable": true,
       "modelCount": 8,
+      "hot": true
+    },
+    {
+      "id": "xiaomi",
+      "name": "MiMo（小米）",
+      "icon": "xiaomimimo.svg",
+      "iconAvailable": true,
+      "modelCount": 2,
       "hot": true
     },
     {
@@ -184,14 +192,6 @@
       "name": "IBM Granite",
       "icon": "ibm",
       "iconAvailable": true,
-      "modelCount": 2,
-      "hot": false
-    },
-    {
-      "id": "xiaomi",
-      "name": "MiMo（小米）",
-      "icon": null,
-      "iconAvailable": false,
       "modelCount": 2,
       "hot": false
     },

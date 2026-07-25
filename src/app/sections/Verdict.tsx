@@ -30,6 +30,11 @@ function monogram(name: string): string {
   return m ? m[0].toUpperCase() : name.charAt(0);
 }
 
+/** icon 含扩展名（本地 SVG）时直接使用，否则按 PNG 处理 */
+function iconSrc(icon: string): string {
+  return `/icons/providers/${icon.includes('.') ? icon : `${icon}.png`}`;
+}
+
 const DIMENSION_META: Record<string, { left: string; right: string; leftPole: string }> = {
   AD: { left: 'AUTONOMY', right: 'DEPENDENCY', leftPole: 'A' },
   BS: { left: 'BELIEF', right: 'SKEPTICISM', leftPole: 'B' },
@@ -153,7 +158,7 @@ export default function Verdict({ result, providers, onShare, onRestart }: Verdi
               >
                 {p.iconAvailable && p.icon ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={`/icons/providers/${p.icon}.png`} alt="" width={14} height={14} />
+                  <img src={iconSrc(p.icon)} alt="" width={14} height={14} />
                 ) : (
                   <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">{monogram(p.name)}</span>
                 )}

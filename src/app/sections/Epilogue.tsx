@@ -78,7 +78,7 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
     }
   };
 
-  /** 用 snapdom 把分享卡渲染成 PNG Blob（下载与系统分享共用） */
+  /** 用 snapdom 把分享卡渲染成 PNG Blob（下载用） */
   const renderCardBlob = async (): Promise<Blob> => {
     const el = document.getElementById('share-card');
     if (!el) throw new Error('share-card not found');
@@ -103,38 +103,6 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
     } catch (err) {
       console.error('export failed', err);
       toast('导出失败，请重试');
-    } finally {
-      setExporting(false);
-    }
-  };
-
-  /**
-   * 系统级分享（可带图）：走 Web Share API，把分享卡 PNG 直接递给系统分享面板，
-   * 用户在目标 App（微信/微博/QQ…）里可删可改。仅移动端/部分桌面浏览器支持。
-   * 微博/Twitter/QQ 的 URL 分享协议本身不支持传图，只能文字+链接。
-   */
-  const canNativeShare =
-    typeof navigator !== 'undefined' &&
-    typeof navigator.share === 'function' &&
-    typeof navigator.canShare === 'function';
-
-  const handleNativeShare = async () => {
-    if (exporting) return;
-    setExporting(true);
-    try {
-      const blob = await renderCardBlob();
-      const file = new File([blob], `closeai-${result.code}.png`, { type: 'image/png' });
-      const payload = { files: [file], text: `${shareText}\n${permalink}` };
-      if (!navigator.canShare(payload)) {
-        toast('当前浏览器不支持带图分享，请用下载图片');
-        return;
-      }
-      await navigator.share(payload);
-    } catch (err) {
-      if ((err as Error).name !== 'AbortError') {
-        console.error('native share failed', err);
-        toast('分享失败，请重试');
-      }
     } finally {
       setExporting(false);
     }
@@ -198,11 +166,6 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
             <button className={BTN} onClick={handleDownload} disabled={exporting}>
               {exporting ? '生成中…' : '下载图片'}
             </button>
-            {canNativeShare && (
-              <button className={BTN} onClick={handleNativeShare} disabled={exporting}>
-                系统分享（可带图）
-              </button>
-            )}
             <button className={BTN} onClick={() => copyText(permalink, '链接已复制')}>
               复制链接
             </button>
@@ -218,9 +181,6 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
               {qrDataUrl ? '收起二维码' : '微信'}
             </button>
           </div>
-          <p className="font-sans text-[11px] text-neutral-600 tracking-wider">
-            微博 / Twitter / QQ 的链接分享不支持传图，发图请用「下载图片」或「系统分享」
-          </p>
         </div>
 
         {/* 微信二维码 */}

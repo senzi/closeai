@@ -57,8 +57,12 @@ OpenRouter 的 models API **没有热度 / 用量 / 排名字段**，唯一可�
   （用产品品牌图标，不用公司品牌图标）；
 - 校验：脚本对照 `scripts/data/lobehub_dark_icons.json`（PNG 包真实文件清单），
   清单里没有的 slug 标记 `iconAvailable: false`；
-- PNG 包只有约 285 个基础图标。**无图标的供应商前端显示首字符 monogram 占位块**
-  （当前仅 MiMo 一家），这是预期行为，不是 bug；
+- PNG 包只有约 285 个基础图标。**无图标的供应商前端显示首字符 monogram 占位块**，
+  这是预期行为，不是 bug；
+- **本地 SVG 图标**（`LOCAL_SVG_MAP`）：lobehub PNG 包缺失但 SVG 包有的图标，
+  手动下载并将 `fill="currentColor"` 改为 `#ffffff`（currentColor 在 `<img>` 下渲染为黑色，
+  黑底上不可见）后存入 `public/icons/providers/`。当前仅 `xiaomi → xiaomimimo.svg`。
+  这类 icon 字段带扩展名，前端对含 `.` 的 icon 不再补 `.png`；
 - 图标只增不删：已缓存的 PNG 重复运行不会重新下载。
 
 ## 前端契约

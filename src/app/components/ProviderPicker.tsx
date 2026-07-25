@@ -44,11 +44,13 @@ function ProviderIcon({ provider, size = 20, inverted = false }: { provider: Pro
   if (!provider.iconAvailable || !provider.icon) {
     return <PlaceholderIcon label={monogram(provider.name)} size={size} inverted={inverted} />;
   }
+  // icon 含扩展名（如本地维护的 .svg）时直接使用，否则按 PNG 处理
+  const src = `/icons/providers/${provider.icon.includes('.') ? provider.icon : `${provider.icon}.png`}`;
   // 选中态徽章反色为白底，图标需同步反色，否则白色图标消失在白底上
   // eslint-disable-next-line @next/next/no-img-element
   return (
     <img
-      src={`/icons/providers/${provider.icon}.png`}
+      src={src}
       alt=""
       width={size}
       height={size}

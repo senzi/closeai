@@ -51,6 +51,16 @@ const ALIAS_MAP = {
 };
 
 /**
+ * 本地维护的 SVG 图标（lobehub PNG 包缺失，但 SVG 包有）。
+ * 文件已手动下载并将 fill 改为 #ffffff（原 fill="currentColor" 在 <img> 下渲染为黑色，
+ * 黑底上不可见），存放在 public/icons/providers/。
+ * icon 字段直接存带扩展名的文件名；前端对含 '.' 的 icon 不再补 .png。
+ */
+const LOCAL_SVG_MAP = {
+  'xiaomi': 'xiaomimimo.svg',  // XiaomiMiMo，lobehub SVG 包有、PNG 包无
+};
+
+/**
  * ID 归一化合并规则（去重）：
  * - `~` 前缀是 OpenRouter 的变体 slug（如 ~openai 与 openai 重复），去掉前缀合并进主条目；
  * - 下同义 ID 合并（modelCount 累加）。
@@ -98,8 +108,7 @@ const EXCLUDE_IDS = new Set([
 ]);
 
 /** provider ID → 展示名（未收录的用 capitalize 兜底） */
-const NAME_MAP = {
-  'openai': 'OpenAI',
+const NAME_MAP = {  'openai': 'OpenAI',
   'anthropic': 'Anthropic',
   'google': 'Google (Gemini)',
   'deepseek': 'DeepSeek',
@@ -141,6 +150,7 @@ const HOT_PROVIDERS = [
   'qwen',
   'x-ai',
   'moonshotai',
+  'xiaomi',
 ];
 
 const args = new Set(process.argv.slice(2));
@@ -209,12 +219,13 @@ async function main() {
 
   const counts = countProviders(modelsRaw);
   const providers = counts.map(({ provider, modelCount }) => {
+    const localSvg = LOCAL_SVG_MAP[provider];
     const iconSlug = ALIAS_MAP[provider] ?? provider;
-    const iconAvailable = knownIcons ? knownIcons.has(iconSlug) : true;
+    const iconAvailable = localSvg ? true : knownIcons ? knownIcons.has(iconSlug) : true;
     return {
       id: provider,
       name: NAME_MAP[provider] ?? provider.charAt(0).toUpperCase() + provider.slice(1),
-      icon: iconAvailable ? iconSlug : null, // null → 前端用占位图标
+      icon: localSvg ?? (iconAvailable ? iconSlug : null), // null → 前端用占位图标
       iconAvailable,
       modelCount,
       hot: HOT_PROVIDERS.includes(provider),
@@ -234,6 +245,7 @@ async function main() {
     let ok = 0, cached = 0, skipped = 0, failed = [];
     for (const p of providers) {
       if (!p.iconAvailable) { skipped++; continue; }
+      if (p.icon.includes('.')) { cached++; continue; } // 本地维护的 SVG，无需下载
       const result = await downloadIcon(p.icon);
       if (result === 'downloaded') ok++;
       else if (result === 'cached') cached++;
