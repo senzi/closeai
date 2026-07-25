@@ -97,7 +97,7 @@ export default function Verdict({ result, onShare }: VerdictProps) {
                 <div className="flex-1 h-px bg-neutral-800 relative">
                   <div
                     className="absolute w-2 h-2 -top-[3.5px] rounded-full bg-white"
-                    style={{ left: `calc(${(1 - d.ratio) * 100}% - 4px)` }}
+                    style={{ left: `calc(${(1 - d.displayRatio) * 100}% - 4px)` }}
                   />
                 </div>
                 <span className={`w-24 ${d.pole !== d.dimension[0] ? 'text-white' : 'text-neutral-600'}`}>

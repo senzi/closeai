@@ -13,6 +13,7 @@ import {
   calculateResult,
   QUESTIONS_PER_DIMENSION,
   TOTAL_QUESTIONS,
+  AXIS_MARGIN,
 } from '../src/app/lib/quiz.ts';
 import {
   PERSONALITIES,
@@ -104,6 +105,22 @@ test('全选左极 → ABMO，全选右极 → DSCG', () => {
 
   const r2 = calculateResult(answerAll(drawn, (q) => rightOf[q.dimension]));
   assert.equal(r2.code, 'DSCG');
+});
+
+test('展示位置：极端结果内缩不贴端点，且每维度抖动不同', () => {
+  const drawn = drawQuestions(QUESTION_BANK, seededRng(7));
+  const leftOf = { AD: 'A', BS: 'B', MC: 'M', OG: 'O' };
+
+  // 全左极端：raw ratio = 1，但 displayRatio 必须 ≤ 1 - AXIS_MARGIN
+  const r = calculateResult(answerAll(drawn, (q) => leftOf[q.dimension]), seededRng(11));
+  for (const d of r.dimensions) {
+    assert.equal(d.ratio, 1);
+    assert.ok(d.displayRatio <= 1 - AXIS_MARGIN + 1e-9, `${d.dimension} 贴到端点了`);
+    assert.ok(d.displayRatio >= AXIS_MARGIN - 1e-9);
+  }
+  // 每维度抖动不同：displayRatio 不应全部相等
+  const unique = new Set(r.dimensions.map((d) => d.displayRatio.toFixed(4)));
+  assert.ok(unique.size > 1, '各维度抖动应不同');
 });
 
 test('双 1.0 平局取左极并标记 borderline', () => {

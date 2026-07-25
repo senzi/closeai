@@ -62,8 +62,10 @@ export interface DimensionScore {
   /** 左极得分 / 右极得分（含权重） */
   left: number;
   right: number;
-  /** 左极占比 0~1，用于 DimensionAxis 光点位置 */
+  /** 左极占比 0~1（原始值，可能是 0 或 1 的极端） */
   ratio: number;
+  /** 展示用占比：内缩 + 每维度随机抖动后的值，范围 [AXIS_MARGIN, 1-AXIS_MARGIN] */
+  displayRatio: number;
   /** 双 1.0 平局（取左极）时标记 true */
   borderline: boolean;
 }
@@ -79,6 +81,18 @@ export interface QuizResult {
 
 export const QUESTIONS_PER_DIMENSION = 2;
 export const TOTAL_QUESTIONS = 8;
+
+/**
+ * 结果轴展示参数：
+ * 光点永远不落在端点上——即使某维度两题全选同一极，
+ * 也会向内缩。内缩量本身是每维度随机的（AXIS_MARGIN ~ AXIS_MARGIN+AXIS_JITTER），
+ * 所以即使四个维度都是极端值，光点到端点的距离也各不相同；
+ * 非极端值再叠加 ±AXIS_JITTER/2 的展示抖动。
+ */
+export const AXIS_MARGIN = 0.08;
+export const AXIS_JITTER = 0.06;
+
+const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 const DIMENSIONS: DimensionId[] = ['AD', 'BS', 'MC', 'OG'];
 
@@ -443,8 +457,10 @@ export function drawQuestions(
  * 评分（含平局规则，P1 §4.2）：
  * 1. 左右极得分不等 → 高分极获胜（权重不同则权重高者自然分胜负）
  * 2. 双 1.0 平局 → 取左极，标记 borderline
+ *
+ * rng 可注入（测试用）：驱动每维度展示位置的随机抖动。
  */
-export function calculateResult(answers: QuizAnswer[]): QuizResult {
+export function calculateResult(answers: QuizAnswer[], rng: () => number = Math.random): QuizResult {
   const scores: DimensionScore[] = DIMENSIONS.map((dim) => {
     const { left, right } = POLE_PAIRS[dim];
     const dimAnswers = answers.filter((a) => a.dimension === dim);
@@ -464,12 +480,22 @@ export function calculateResult(answers: QuizAnswer[]): QuizResult {
         : right;
 
     const total = leftScore + rightScore;
+    const ratio = total === 0 ? 0.5 : leftScore / total;
+
+    // 展示位置：原始占比 + 轻微抖动，再钳进每维度独立的随机内缩带
+    // （内缩量两端各自随机 → 即使四个维度同为极端值，光点位置也各不相同）
+    const insetLeft = AXIS_MARGIN + rng() * AXIS_JITTER;
+    const insetRight = AXIS_MARGIN + rng() * AXIS_JITTER;
+    const wobble = (rng() * 2 - 1) * (AXIS_JITTER / 2);
+    const displayRatio = clamp(ratio + wobble, insetLeft, 1 - insetRight);
+
     return {
       dimension: dim,
       pole,
       left: leftScore,
       right: rightScore,
-      ratio: total === 0 ? 0.5 : leftScore / total,
+      ratio,
+      displayRatio,
       borderline,
     };
   });
