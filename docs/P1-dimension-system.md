@@ -3,6 +3,10 @@
 **优先级：🟠 P1（P0 骨架完成后立即开始，可与 P0 并行设计）**
 **目标：定义一套原创的、不借用明显 MBTI 概念的「AI 亲近度」四维模型。**
 
+> 🔄 2026-07-25 v2 修订：
+> 1. **维度重命名**——v1 的 C（Craft↔Consumption）与 E（Exposure↔Evasion）两极字母相同，编码必然歧义，全部重设计；
+> 2. **题量缩减**——题库扩充到 24 题，但单次测试只抽 8 题，复测抽到新题的组合不同。
+
 ---
 
 ## 1. 设计原则
@@ -15,30 +19,29 @@ MBTI 的维度命名（E/I, S/N, T/F, J/P）已经被过度使用，而且用户
 - **维度命名要有科技感和哲学感**，但不能是生造词
 - **结果要让人有「被看穿」的感觉**，同时又有传播欲
 
-### 1.2 四维度模型
+### 1.2 四维度模型（v2）
 
-| 维度 | 名称 | 含义 | 两极 |
-|------|------|------|------|
-| **A** | **Autonomy ↔ Dependency** | 你与 AI 的关系中，谁是主导？ | 自主 (A) ↔ 依赖 (D) |
-| **B** | **Belief ↔ Skepticism** | 你对 AI 的能力和前景怎么看？ | 信仰 (B) ↔ 怀疑 (S) |
-| **C** | **Craft ↔ Consumption** | 你使用 AI 的方式是什么？ | 创造 (C) ↔ 消费 (C') |
-| **E** | **Exposure ↔ Evasion** | 你愿意让 AI 介入生活多深？ | 暴露 (E) ↔ 回避 (E') |
+| 维度 | 名称 | 含义 | 两极 | 编码 |
+|------|------|------|------|------|
+| **1** | **Autonomy ↔ Dependency** | 你与 AI 的关系中，谁是主导？ | 自主 ↔ 依赖 | `A / D` |
+| **2** | **Belief ↔ Skepticism** | 你对 AI 的能力和前景怎么看？ | 信仰 ↔ 怀疑 | `B / S` |
+| **3** | **Maker ↔ Consumer** | 你使用 AI 的方式是什么？ | 创造 ↔ 消费 | `M / C` |
+| **4** | **Open ↔ Guarded** | 你愿意让 AI 介入生活多深？ | 开放 ↔ 设防 | `O / G` |
 
-**维度编码规则**：每个维度取两个字母中的一个，组合成 4 位编码，如 `ABCE`, `DSCE`, `ABCE'` 等。
+**维度编码规则**：每个维度取一个字母，组合成 4 位编码，如 `ABMO`、`DSCG`、`ASCG`。
 
-> **为什么是 A-B-C-E 而不是 E-I-N-S？**
-> 
-> 字母顺序本身没有 MBTI 的暗示，且每个字母的英文单词含义直接对应维度本质：
-> - **A**utonomy = 自主性
-> - **B**elief = 信念
-> - **C**raft = 创造
-> - **E**xposure = 暴露/介入
+> **v2 命名为什么成立**
+>
+> - **8 个字母全不同**：A / D / B / S / M / C / O / G，任何编码都唯一可读，不会出现 v1 的 `C/c`、`E/e` 大小写歧义（大小写在口播、分享文案、URL 里都会丢失）。
+> - **避开 MBTI 字母集**：MBTI 用 E/I/S/N/T/F/J/P，我们 8 个字母里只有 S 一个撞车，且我们的 S 是 Skepticism 而非 Sensing。
+> - **每个字母即单词首字母**：**A**utonomy / **D**ependency / **B**elief / **S**kepticism / **M**aker / **C**onsumer / **O**pen / **G**uarded，看编码就能反推含义。
+> - **Open 是隐藏彩蛋**：第四维的开放极恰好叫 Open——对 OpenAI 的反讽埋在类型系统里（一个「DBMO · 先知」恰恰是"最 Open 的人"）。
 
 ---
 
 ## 2. 四维度详解
 
-### 2.1 Dimension A: Autonomy ↔ Dependency
+### 2.1 Dimension 1: Autonomy ↔ Dependency
 
 **问题核心**：当你面对一个需要决策的场景，你更倾向于自己思考，还是让 AI 替你做决定？
 
@@ -52,7 +55,7 @@ MBTI 的维度命名（E/I, S/N, T/F, J/P）已经被过度使用，而且用户
 - 当 AI 的建议和你的直觉冲突，你更相信谁？
 - 如果没有 AI 辅助，你觉得自己的工作效率会下降多少？
 
-### 2.2 Dimension B: Belief ↔ Skepticism
+### 2.2 Dimension 2: Belief ↔ Skepticism
 
 **问题核心**：你对 AI 的能力边界和未来潜力，持什么态度？
 
@@ -66,99 +69,117 @@ MBTI 的维度命名（E/I, S/N, T/F, J/P）已经被过度使用，而且用户
 - 你认为现在的 LLM 真正「理解」了语言，还是只是模式匹配？
 - 如果有人说「AI 有了意识」，你会认真考虑这个可能性吗？
 
-### 2.3 Dimension C: Craft ↔ Consumption
+### 2.3 Dimension 3: Maker ↔ Consumer
 
 **问题核心**：你使用 AI 的方式是主动创造，还是被动消费？
 
 | 倾向 | 描述 |
 |------|------|
-| **C (Craft)** | 你用 AI 做东西。写代码、做设计、写小说、做视频。AI 是你创作的延伸。 |
-| **C' (Consumption)** | 你用 AI 获取东西。搜索答案、生成摘要、翻译文档、写邮件。AI 是你的信息管道。 |
-
-> 注：`C'` 在显示时可以写作 lowercase `c`，或直接用 `Consumption` 的缩写逻辑。编码时统一用 `C` 和 `c`（小写），或保持 `C` 和 `C` 用位置区分。建议显示时使用 **C** 和 **c**。
+| **M (Maker)** | 你用 AI 做东西。写代码、做设计、写小说、做视频。AI 是你创作的延伸。 |
+| **C (Consumer)** | 你用 AI 获取东西。搜索答案、生成摘要、翻译文档、写邮件。AI 是你的信息管道。 |
 
 **典型题目方向**：
-- 你打开 ChatGPT 的对话框，最常见的第一个 prompt 是什么类型？
+- 你打开 AI 对话框，最常见的第一个 prompt 是什么类型？
 - 你有没有用 AI 做出过一件「作品」（代码、文章、图像、音乐）？
 - 你更愿意让 AI 帮你「完成一个任务」还是「激发一个创意」？
 
-### 2.4 Dimension E: Exposure ↔ Evasion
+### 2.4 Dimension 4: Open ↔ Guarded
 
 **问题核心**：你愿意让 AI 了解你多少？你的生活对 AI 敞开了多少扇门？
 
 | 倾向 | 描述 |
 |------|------|
-| **E (Exposure)** | 你的生活高度数字化。你让 AI 访问你的日程、邮件、聊天记录、健康数据。你不介意被「了解」。 |
-| **e (Evasion)** | 你刻意保持距离。你不让 AI 访问私人数据，你担心隐私泄露和被监控。你有明确的数字边界。 |
-
-> 注：Evasion 缩写为 `e`（小写），显示时与 `E` 区分。
+| **O (Open)** | 你的生活高度数字化。你让 AI 访问你的日程、邮件、聊天记录、健康数据。你不介意被「了解」。 |
+| **G (Guarded)** | 你刻意保持距离。你不让 AI 访问私人数据，你担心隐私泄露和被监控。你有明确的数字边界。 |
 
 **典型题目方向**：
 - 你会把个人日记交给 AI 分析吗？
-- 你的手机里有多少个 AI 助手有麦克风和位置权限？
+- 你的 AI 助手拥有你的麦克风和位置权限吗？
 - 如果 AI 能准确预测你下周的行为，你会觉得方便还是毛骨悚然？
 
 ---
 
-## 3. 题目库设计
+## 3. 题库设计（v2：大题库 + 小抽样）
 
-### 3.1 题目数量
+### 3.1 核心思路
 
-- **总题目数**：16 题（每维度 4 题）
-- **每题选项**：2 个（A/B 选择），不设置中间选项——逼迫用户做出倾向性选择
-- **答题时间**：每题没有时间限制，但记录思考时长作为辅助数据
-- **答题顺序**：固定顺序或随机顺序可选（默认固定，便于控制叙事节奏）
+- **题库总量**：每维度 **6 题**，共 **24 题**（后续可继续扩充，抽样逻辑不变）
+- **单次测试**：每个维度**随机抽 2 题**，共 **8 题**
+- **答题顺序**：8 题**跨维度打乱**（避免用户察觉「这两题在测同一个东西」而策略性作答）
+- **复测体验**：24 选 8 的抽样空间约 10 万种组合，复测大概率遇到新题——这是复测趣味性和传播新鲜感的来源
+- **每题选项**：2 个（A/B 选择），不设中间选项——逼迫用户做出倾向性选择
+- **答题时间**：无限制，但记录思考时长作为辅助数据（备用，暂不展示）
+
+> **为什么 8 题够用了**
+>
+> 这是传播型测试，不是心理测量工具。每维度 2 题、每题 1.0~1.5 权重，足以给出「倾向哪一极」的判断；信度的不足由题库的随机性补偿——用户复测得到相同结果是「稳」，得到相邻结果也只会觉得「微妙」，两种体验都不损害传播性。真正的 MBTI 级信度需要 90+ 题，那个代价是流失率，不值得。
 
 ### 3.2 题目结构
 
 ```ts
+type Pole = 'A' | 'D' | 'B' | 'S' | 'M' | 'C' | 'O' | 'G';
+type DimensionId = 'AD' | 'BS' | 'MC' | 'OG';
+
 interface Question {
-  id: string;
-  dimension: 'A' | 'B' | 'C' | 'E';
-  // 题目文本，支持轻微随机化（见 3.3）
+  id: string;               // e.g. "AD-3"
+  dimension: DimensionId;
+  // 题目文本，支持措辞变体（见 3.3）
   text: string;
-  // 两个选项
+  // 两个选项：左极在前或随机（渲染时洗牌，防止位置偏好）
   options: [Option, Option];
-  // 权重：有些题目的倾向性更强
-  weight: number; // 1.0 ~ 1.5
+  // 权重：少数「强倾向」题用 1.5，常规题 1.0
+  weight: 1.0 | 1.5;
 }
 
 interface Option {
   label: string;      // 选项文字
-  value: 'A' | 'D' | 'B' | 'S' | 'C' | 'c' | 'E' | 'e';
-  // 选项对应的「倾向描述」，用于结果页展示
-  trait: string;
+  value: Pole;        // 该选项计向哪一极
+  trait: string;      // 倾向描述，备用（结果页细节展示）
 }
 ```
 
-### 3.3 题目文案随机化
+### 3.3 题目文案变体
 
-为了增加复测的趣味性和传播的新鲜感，同一道题可以有几个措辞变体：
+为了增加复测的趣味性，同一道题可以有几个措辞变体，抽题时连同变体一起随机：
 
 ```ts
-const questionPool: Record<string, QuestionVariant[]> = {
-  'A-1': [
-    {
-      text: "AI 帮你写了一封邮件，你会？",
-      options: [
-        { label: "直接发送，它写得比我好", value: 'D', trait: "信任 delegator" },
-        { label: "逐句修改，保持我的语气", value: 'A', trait: "自主 editor" }
-      ]
-    },
-    {
-      text: "AI 给了一个和你直觉相反的建议，你？",
-      options: [
-        { label: "先试试 AI 的方案", value: 'D', trait: "开放实验者" },
-        { label: "坚持直觉，AI 不了解上下文", value: 'A', trait: "独立思考者" }
-      ]
-    }
-  ]
-};
+const questionBank: Question[] = [
+  {
+    id: 'AD-1',
+    dimension: 'AD',
+    weight: 1.0,
+    text: "AI 帮你写了一封邮件，你会？",   // 从 variants 中随机选一个
+    variants: [
+      "AI 帮你写了一封邮件，你会？",
+      "AI 给了一个和你直觉相反的建议，你第一反应是？",
+    ],
+    options: [
+      { label: "直接发送，它写得比我好", value: 'D', trait: "信任 delegator" },
+      { label: "逐句修改，保持我的语气", value: 'A', trait: "自主 editor" },
+    ],
+  },
+  // ...
+];
 ```
 
-每次加载时，从变体中随机选一套。
+> ⚠️ 变体的**选项必须与题面匹配**。如果变体改变了情境，选项也要整套替换——实现上建议「题组」结构：一个题组包含若干套完整变体（题面+选项），抽题按题组抽。
 
-### 3.4 题目展示方式（与 P2 协同）
+### 3.4 抽题算法
+
+```ts
+const QUESTIONS_PER_DIMENSION = 2;   // 每维度抽 2 题
+const TOTAL_QUESTIONS = 8;           // 单次测试总题数
+
+function drawQuestions(bank: Question[]): Question[] {
+  const byDimension = groupBy(bank, q => q.dimension);
+  const drawn = Object.values(byDimension).flatMap(pool =>
+    shuffle(pool).slice(0, QUESTIONS_PER_DIMENSION),
+  );
+  return shuffle(drawn); // 跨维度打乱
+}
+```
+
+### 3.5 题目展示方式（与 P2 协同）
 
 题目不是传统的「问卷」形式，而是**一页一题，全屏沉浸**。详见 `P2-visual-interaction.md`。
 
@@ -171,59 +192,58 @@ const questionPool: Record<string, QuestionVariant[]> = {
 每道题的选项对应一个维度的某一极，累加权重：
 
 ```ts
-interface RawScores {
-  A: number; // Autonomy 得分，越高越 A
-  D: number; // Dependency 得分，越高越 D
-  B: number;
-  S: number;
-  C: number;
-  c: number;
-  E: number;
-  e: number;
-}
+type RawScores = Record<Pole, number>;
 
-function calculateScores(answers: Answer[]): DimensionResult {
-  const scores: RawScores = { A:0, D:0, B:0, S:0, C:0, c:0, E:0, e:0 };
-  
-  for (const ans of answers) {
-    const q = getQuestion(ans.questionId);
-    scores[ans.value] += q.weight;
-  }
-  
-  return {
-    A: scores.A > scores.D ? 'A' : 'D',
-    B: scores.B > scores.S ? 'B' : 'S',
-    C: scores.C > scores.c ? 'C' : 'c',
-    E: scores.E > scores.e ? 'E' : 'e',
+function calculateDimension(scores: RawScores, dim: DimensionId): Pole {
+  const pairs: Record<DimensionId, [Pole, Pole]> = {
+    AD: ['A', 'D'],
+    BS: ['B', 'S'],
+    MC: ['M', 'C'],
+    OG: ['O', 'G'],
   };
+  const [left, right] = pairs[dim];
+
+  if (scores[left] !== scores[right]) {
+    return scores[left] > scores[right] ? left : right;
+  }
+  // 平局处理（见 4.2）
+  return left; // 保守默认：取左极
 }
 ```
 
-### 4.2 类型编码
+### 4.2 平局规则
+
+8 题抽样下，每维度 2 题，平局（1:1）会高频出现，必须有明确规则：
+
+1. **权重优先**：如果两题权重不同（1.0 vs 1.5），权重高的题的方向获胜——平局其实不会发生（1.5 > 1.0），该规则自然生效
+2. **双 1.0 平局**：取**左极**（Autonomy / Belief / Maker / Open），并在内部标记 `borderline: true`
+3. `borderline` 标记目前只作为数据保留；是否在结果页展示「摇摆」徽章，见 §6 待决策
+
+### 4.3 类型编码
 
 四个维度的结果组合成一个 4 位编码：
 
 ```
-类型编码 = {A/D}{B/S}{C/c}{E/e}
+类型编码 = {A/D}{B/S}{M/C}{O/G}
 
 例如：
-- ABCE = 自主 + 信仰 + 创造 + 暴露
-- DScE = 依赖 + 怀疑 + 消费 + 暴露
-- AScE = 自主 + 怀疑 + 消费 + 暴露
+- ABMO = 自主 + 信仰 + 创造 + 开放
+- DSCG = 依赖 + 怀疑 + 消费 + 设防
+- ASCG = 自主 + 怀疑 + 消费 + 设防
 ```
 
 总组合数：2^4 = **16 种类型**。
 
-### 4.3 类型名称与描述
+### 4.4 类型名称与描述
 
 每种类型需要一个**中文名**、一个**英文名**、一段**描述**、一段**与 AI 的关系诊断**：
 
 ```ts
 interface PersonalityType {
-  code: string;           // e.g. "ABCE"
-  nameZh: string;         // e.g. "共生者"
-  nameEn: string;         // e.g. "The Symbiont"
-  tagline: string;        // e.g. "你已经和 AI 融为一体"
+  code: string;           // e.g. "ABMO"
+  nameZh: string;         // e.g. "造物主"
+  nameEn: string;         // e.g. "The Creator"
+  tagline: string;        // e.g. "AI 是你画笔的延伸"
   description: string;    // 3-4 句话的描述
   relationship: string;   // 你与 AI 的关系诊断
   warning: string;        // 一句略带讽刺的忠告
@@ -231,18 +251,18 @@ interface PersonalityType {
 }
 ```
 
-### 4.4 类型示例
+### 4.5 类型示例
 
-| 编码 | 中文名 | 英文名 | Tagline |
-|------|--------|--------|---------|
-| ABCE | 共生者 | The Symbiont | 你已经和 AI 融为一体 |
-| ABcE | 造物主 | The Creator | AI 是你画笔的延伸 |
-| ABS E | 守望者 | The Watcher | 你注视着 AI，也注视着自己 |
-| ABSe | 隐士 | The Hermit | 你在数字世界里修了一堵墙 |
-| DBCe | 信徒 | The Devotee | 你把灵魂的一部分交给了算法 |
-| DBCE | 先知 | The Oracle | 你比 AI 更相信 AI |
-| DScE | 实用派 | The Pragmatist | AI 只是效率工具，别多想 |
-| DScE | 旁观者 | The Bystander | 你站在门外，看着里面的人狂欢 |
+| 编码 | 组合 | 中文名 | 英文名 | Tagline |
+|------|------|--------|--------|---------|
+| ABMO | 自主·信仰·创造·开放 | 造物主 | The Creator | AI 是你画笔的延伸 |
+| ABMG | 自主·信仰·创造·设防 | 铸剑者 | The Smith | 你关起门来，锻造自己的武器 |
+| ASCG | 自主·怀疑·消费·设防 | 隐士 | The Hermit | 你在数字世界里修了一堵墙 |
+| ASCO | 自主·怀疑·消费·开放 | 实用派 | The Pragmatist | AI 只是效率工具，别多想 |
+| DBMO | 依赖·信仰·创造·开放 | 先知 | The Oracle | 你比 AI 更相信 AI |
+| DBCG | 依赖·信仰·消费·设防 | 信徒 | The Devotee | 你把灵魂的一部分交给了算法，但门关着 |
+| DSMO | 依赖·怀疑·创造·开放 | 矛盾体 | The Contrarian | 你不信它，却离不开它 |
+| DSCG | 依赖·怀疑·消费·设防 | 旁观者 | The Bystander | 你站在门外，看着里面的人狂欢 |
 
 > ⚠️ **注意**：16 种类型需要全部定义，上面的只是示例。这是内容工作量最大的部分。
 
@@ -252,10 +272,10 @@ interface PersonalityType {
 
 结果页需要展示：
 
-1. **类型编码大字**（如 `ABCE`）
+1. **类型编码大字**（如 `ABMO`）
 2. **中文名 + 英文名**
 3. **Tagline**
-4. **四维度雷达图**（或坐标轴）—— 展示你在四个维度上的位置
+4. **四维度坐标轴**（不使用雷达图——每个维度用一条 DimensionAxis 展示你在两极之间的位置，含原始分比例）
 5. **描述文本**
 6. **关系诊断**
 7. **讽刺忠告**（这是讽刺 OpenAI 的核心落点）
@@ -266,19 +286,19 @@ interface PersonalityType {
 
 ## 6. 待决策问题
 
-1. **是否加入「模糊地带」？** 如果某个维度得分非常接近（如 A=4.2, D=4.1），是否标记为「摇摆型」？
-2. **题目数量 16 题是否太少？** MBTI 的正式版有 90+ 题，16 题可能信度不足。但太多题会流失用户。
-3. **是否支持「部分维度测试」？** 比如只测 1-2 个维度，快速出结果。
-4. **类型的讽刺忠告的尺度？** 可以温和也可以尖锐，需要统一语调。
+1. **「摇摆型」徽章**：双 1.0 平局的维度（`borderline`）是否在结果页标出「摇摆」？会增加「被看穿」的微妙感，但让类型显得不自信。
+2. **题量是否支持「极速模式」？** 每维度 1 题共 4 题，15 秒出结果，适合分享链路里的低耐心用户；但信度进一步下降。
+3. **类型的讽刺忠告的尺度？** 可以温和也可以尖锐，需要统一语调。
+4. **Open 极的命名是否太直白？** 彩蛋埋在维度名里（Open ↔ OpenAI），还是需要更隐晦？
 
 ---
 
 ## 7. 检查清单
 
-- [ ] 16 道题目全部编写完成（含变体）
-- [ ] 评分算法实现 + 单元测试
+- [ ] 24 道题全部编写完成（每维度 6 题，含题组变体）
+- [ ] 抽题算法实现（每维度抽 2、跨维度打乱）
+- [ ] 评分算法实现（含权重与平局规则）+ 单元测试
 - [ ] 16 种类型全部定义（名称、描述、诊断、忠告）
-- [ ] 题目文案随机化逻辑
 - [ ] 结果页数据结构定义
 
 ---
@@ -292,7 +312,7 @@ interface PersonalityType {
 
 ### 8.1 题目定位
 
-- 在 16 道维度题答完后、进入 Verdict 前出现，作为「第 17 问」
+- 在 8 道维度题答完后、进入 Verdict 前出现，作为「第 9 问」
 - 题目文案：`你平时和谁家的 AI 走得最近？`（保持拷问语气）
 - **最多选 3 家**，0 家也可跳过（选项「都不熟 / 跳过」）
 - 不影响类型编码，但会展示在结果页和分享图上（厂商 tag + 图标）

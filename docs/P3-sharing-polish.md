@@ -22,11 +22,11 @@
 ├────────────────────────────────────────────┤
 │                                            │
 │              ████                          │
-│              A B C E                       │  ← 类型编码，Space Grotesk 96px
+│              D B M O                       │  ← 类型编码，Space Grotesk 96px
 │                                            │
-│           共生者 · The Symbiont             │  ← 中文名 + 英文名
+│           先知 · The Oracle             │  ← 中文名 + 英文名
 │                                            │
-│      "你已经和 AI 融为一体"                  │  ← Tagline，斜体
+│      "你比 AI 更相信 AI"                  │  ← Tagline，斜体
 │                                            │
 │  ┌────────────────────────────────────┐    │
 │  │  AUTONOMY ████████████░░ DEPENDENCY│    │  ← 四维度条形图
@@ -53,7 +53,7 @@ export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const type = searchParams.get('type') || 'ABCE';
+  const type = searchParams.get('type') || 'ABMO';
   
   // 根据 type 查询对应的人格数据
   const personality = getPersonalityByCode(type);
@@ -114,13 +114,13 @@ export async function GET(req: NextRequest) {
 ┌────────────────────┐
 │     closeai.moe    │
 │                    │
-│       A B C E      │
+│       D B M O      │
 │                    │
-│   共生者           │
-│   The Symbiont     │
+│   先知             │
+│   The Oracle       │
 │                    │
-│ "你已经和 AI       │
-│   融为一体"        │
+│ "你比 AI 更相信   │
+│   AI"              │
 │                    │
 │   [雷达图简化版]    │
 │                    │
@@ -165,11 +165,11 @@ interface CopyTemplate {
 }
 ```
 
-### 2.2 示例模板库（以 ABCE「共生者」为例）
+### 2.2 示例模板库（以 DBMO「先知」为例）
 
 ```ts
 const copyTemplates: Record<string, CopyTemplate> = {
-  ABCE: {
+  DBMO: {
     opening: [
       "测了一下我和 AI 的关系，结果有点意思。",
       "原来我在 AI 眼里是这样的……",
@@ -177,12 +177,12 @@ const copyTemplates: Record<string, CopyTemplate> = {
       "OpenAI 不会告诉你的真相。",
     ],
     reveal: [
-      "我的 AI 亲近度类型是 ABCE —— 共生者。",
-      "诊断结果：ABCE（共生者）。",
-      "它说我已经是「共生者」了。",
+      "我的 AI 亲近度类型是 DBMO —— 先知。",
+      "诊断结果：DBMO（先知）。",
+      "它说我是「先知」。",
     ],
     comment: [
-      "「你已经和 AI 融为一体」—— 这话听起来像赞美，又像警告。",
+      "「你比 AI 更相信 AI」—— 这话听起来像赞美，又像警告。",
       "不知道这是好事还是坏事。",
       "仔细一想，好像确实如此。",
       "有点准，有点吓人。",
@@ -219,9 +219,9 @@ function generateShareCopy(typeCode: string): string {
 ```
 一个残酷的自我认知测试。
 
-我的 AI 亲近度类型是 ABCE —— 共生者。
+我的 AI 亲近度类型是 DBMO —— 先知。
 
-「你已经和 AI 融为一体」—— 这话听起来像赞美，又像警告。
+「你比 AI 更相信 AI」—— 这话听起来像赞美，又像警告。
 
 你也来测测？→ closeai.moe
 ```
@@ -250,7 +250,7 @@ function generateShareCopy(typeCode: string): string {
 
 | 平台 | 分享方式 | 适配要点 |
 |------|----------|----------|
-| **复制链接** | 复制 `closeai.moe/?r=ABCE` 到剪贴板 | URL 带 `?r=` 参数，打开直接显示对应结果页（无需重测）|
+| **复制链接** | 复制 `closeai.moe/?r=DBMO` 到剪贴板 | URL 带 `?r=` 参数，打开直接显示对应结果页（无需重测）|
 | **下载图片** | 生成并下载 1200×630 PNG | 使用 `html2canvas` 或直接从 `/api/og` 获取 |
 | **微博** | Web Intent + 文案复制 | 文案需要手动粘贴（微博 Web Intent 不支持预填充正文），或引导用户扫码 |
 | **Twitter/X** | `https://twitter.com/intent/tweet?text=...&url=...` | 预填充文案 + 链接，OG 图自动抓取 |
@@ -262,7 +262,7 @@ function generateShareCopy(typeCode: string): string {
 用户分享出去后，点击链接的人应该直接看到结果，而不是从头答题。
 
 ```
-https://closeai.moe/?r=ABCE
+https://closeai.moe/?r=DBMO
 ```
 
 实现逻辑：

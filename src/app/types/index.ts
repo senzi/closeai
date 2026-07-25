@@ -10,14 +10,18 @@ export interface AnimationState {
   direction: 'forward' | 'backward';
 }
 
+/** 四维结果（P1 v2：8 个字母全不同，见 docs/P1-dimension-system.md §1.2） */
+export type Pole = 'A' | 'D' | 'B' | 'S' | 'M' | 'C' | 'O' | 'G';
+export type DimensionId = 'AD' | 'BS' | 'MC' | 'OG';
+
 export interface DimensionResult {
-  A: 'A' | 'D';
-  B: 'B' | 'S';
-  C: 'C' | 'c';
-  E: 'E' | 'e';
+  AD: 'A' | 'D';
+  BS: 'B' | 'S';
+  MC: 'M' | 'C';
+  OG: 'O' | 'G';
 }
 
-export type TypeCode = string; // e.g. "ABCE"
+export type TypeCode = string; // e.g. "ABMO"
 
 /** 供应商选择结果（P1 附加题，见 docs/P1-dimension-system.md §8） */
 export interface ProviderSelection {
