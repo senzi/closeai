@@ -1,0 +1,471 @@
+{
+  "generatedAt": "2026-07-25T01:30:14.815Z",
+  "source": "openrouter.ai/api/v1/models + @lobehub/icons-static-png",
+  "maxSelectable": 3,
+  "providers": [
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "icon": "openai",
+      "iconAvailable": true,
+      "modelCount": 67,
+      "hot": true
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "icon": "anthropic",
+      "iconAvailable": true,
+      "modelCount": 17,
+      "hot": true
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "icon": "google",
+      "iconAvailable": true,
+      "modelCount": 30,
+      "hot": true
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "icon": "deepseek",
+      "iconAvailable": true,
+      "modelCount": 11,
+      "hot": true
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen（通义）",
+      "icon": "qwen",
+      "iconAvailable": true,
+      "modelCount": 47,
+      "hot": true
+    },
+    {
+      "id": "x-ai",
+      "name": "xAI（Grok）",
+      "icon": "xai",
+      "iconAvailable": true,
+      "modelCount": 5,
+      "hot": true
+    },
+    {
+      "id": "moonshotai",
+      "name": "Moonshot Kimi（月之暗面）",
+      "icon": "moonshot",
+      "iconAvailable": true,
+      "modelCount": 7,
+      "hot": true
+    },
+    {
+      "id": "mistralai",
+      "name": "Mistral",
+      "icon": "mistral",
+      "iconAvailable": true,
+      "modelCount": 19,
+      "hot": false
+    },
+    {
+      "id": "z-ai",
+      "name": "Z.ai（GLM）",
+      "icon": "zai",
+      "iconAvailable": true,
+      "modelCount": 12,
+      "hot": false
+    },
+    {
+      "id": "nvidia",
+      "name": "NVIDIA",
+      "icon": "nvidia",
+      "iconAvailable": true,
+      "modelCount": 10,
+      "hot": false
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax",
+      "icon": "minimax",
+      "iconAvailable": true,
+      "modelCount": 8,
+      "hot": false
+    },
+    {
+      "id": "meta-llama",
+      "name": "Meta Llama",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 8,
+      "hot": false
+    },
+    {
+      "id": "poolside",
+      "name": "Poolside",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 6,
+      "hot": false
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "icon": "openrouter",
+      "iconAvailable": true,
+      "modelCount": 6,
+      "hot": false
+    },
+    {
+      "id": "cohere",
+      "name": "Cohere",
+      "icon": "cohere",
+      "iconAvailable": true,
+      "modelCount": 5,
+      "hot": false
+    },
+    {
+      "id": "amazon",
+      "name": "Amazon",
+      "icon": "aws",
+      "iconAvailable": true,
+      "modelCount": 5,
+      "hot": false
+    },
+    {
+      "id": "perplexity",
+      "name": "Perplexity",
+      "icon": "perplexity",
+      "iconAvailable": true,
+      "modelCount": 5,
+      "hot": false
+    },
+    {
+      "id": "inclusionai",
+      "name": "蚂蚁（百灵）",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 4,
+      "hot": false
+    },
+    {
+      "id": "aion-labs",
+      "name": "Aion-labs",
+      "icon": "aionlabs",
+      "iconAvailable": true,
+      "modelCount": 4,
+      "hot": false
+    },
+    {
+      "id": "~anthropic",
+      "name": "~anthropic",
+      "icon": "anthropic",
+      "iconAvailable": true,
+      "modelCount": 4,
+      "hot": false
+    },
+    {
+      "id": "bytedance-seed",
+      "name": "豆包（字节）",
+      "icon": "bytedance",
+      "iconAvailable": true,
+      "modelCount": 4,
+      "hot": false
+    },
+    {
+      "id": "thedrummer",
+      "name": "Thedrummer",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 4,
+      "hot": false
+    },
+    {
+      "id": "nousresearch",
+      "name": "Nous Research",
+      "icon": "nousresearch",
+      "iconAvailable": true,
+      "modelCount": 4,
+      "hot": false
+    },
+    {
+      "id": "kwaipilot",
+      "name": "快手（Kwaipilot）",
+      "icon": "kwaipilot",
+      "iconAvailable": true,
+      "modelCount": 3,
+      "hot": false
+    },
+    {
+      "id": "tencent",
+      "name": "腾讯混元",
+      "icon": "tencent",
+      "iconAvailable": true,
+      "modelCount": 3,
+      "hot": false
+    },
+    {
+      "id": "sao10k",
+      "name": "Sao10K",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 3,
+      "hot": false
+    },
+    {
+      "id": "nex-agi",
+      "name": "Nex-agi",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "stepfun",
+      "name": "阶跃星辰",
+      "icon": "stepfun",
+      "iconAvailable": true,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "ibm-granite",
+      "name": "IBM Granite",
+      "icon": "ibm",
+      "iconAvailable": true,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "~openai",
+      "name": "~openai",
+      "icon": "openai",
+      "iconAvailable": true,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "~google",
+      "name": "~google",
+      "icon": "google",
+      "iconAvailable": true,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "xiaomi",
+      "name": "Xiaomi",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "arcee-ai",
+      "name": "Arcee-ai",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "rekaai",
+      "name": "Rekaai",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "relace",
+      "name": "Relace",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "morph",
+      "name": "Morph",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft",
+      "icon": "microsoft",
+      "iconAvailable": true,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "inflection",
+      "name": "Inflection",
+      "icon": "inflection",
+      "iconAvailable": true,
+      "modelCount": 2,
+      "hot": false
+    },
+    {
+      "id": "meituan",
+      "name": "Meituan",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "thinkingmachines",
+      "name": "Thinkingmachines",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "meta",
+      "name": "Meta",
+      "icon": "meta",
+      "iconAvailable": true,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "~x-ai",
+      "name": "~x-ai",
+      "icon": "xai",
+      "iconAvailable": true,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "sakana",
+      "name": "Sakana",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "perceptron",
+      "name": "Perceptron",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "~moonshotai",
+      "name": "~moonshotai",
+      "icon": "moonshot",
+      "iconAvailable": true,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "inception",
+      "name": "Inception",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "upstage",
+      "name": "Upstage",
+      "icon": "upstage",
+      "iconAvailable": true,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "writer",
+      "name": "Writer",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "allenai",
+      "name": "Allenai",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "deepcogito",
+      "name": "Deepcogito",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "ai21",
+      "name": "Ai21",
+      "icon": "ai21",
+      "iconAvailable": true,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "bytedance",
+      "name": "Bytedance",
+      "icon": "bytedance",
+      "iconAvailable": true,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "cognitivecomputations",
+      "name": "Cognitivecomputations",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "baidu",
+      "name": "Baidu",
+      "icon": "baidu",
+      "iconAvailable": true,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "anthracite-org",
+      "name": "Anthracite-org",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "mancer",
+      "name": "Mancer",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "undi95",
+      "name": "Undi95",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    },
+    {
+      "id": "gryphe",
+      "name": "Gryphe",
+      "icon": null,
+      "iconAvailable": false,
+      "modelCount": 1,
+      "hot": false
+    }
+  ]
+}

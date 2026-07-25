@@ -1,0 +1,292 @@
+[
+  {
+    "provider": "openai",
+    "model_count": 67,
+    "matched_icon": "openai"
+  },
+  {
+    "provider": "qwen",
+    "model_count": 47,
+    "matched_icon": "qwen"
+  },
+  {
+    "provider": "google",
+    "model_count": 30,
+    "matched_icon": "google"
+  },
+  {
+    "provider": "mistralai",
+    "model_count": 19,
+    "matched_icon": "mistral"
+  },
+  {
+    "provider": "anthropic",
+    "model_count": 17,
+    "matched_icon": "anthropic"
+  },
+  {
+    "provider": "z-ai",
+    "model_count": 12,
+    "matched_icon": "xai"
+  },
+  {
+    "provider": "deepseek",
+    "model_count": 11,
+    "matched_icon": "deepseek"
+  },
+  {
+    "provider": "nvidia",
+    "model_count": 10,
+    "matched_icon": "nvidia"
+  },
+  {
+    "provider": "minimax",
+    "model_count": 8,
+    "matched_icon": "minimax"
+  },
+  {
+    "provider": "meta-llama",
+    "model_count": 8,
+    "matched_icon": "meta-llama"
+  },
+  {
+    "provider": "moonshotai",
+    "model_count": 7,
+    "matched_icon": "moonshot"
+  },
+  {
+    "provider": "poolside",
+    "model_count": 6,
+    "matched_icon": "poolside"
+  },
+  {
+    "provider": "openrouter",
+    "model_count": 6,
+    "matched_icon": "openrouter"
+  },
+  {
+    "provider": "x-ai",
+    "model_count": 5,
+    "matched_icon": "x-ai"
+  },
+  {
+    "provider": "cohere",
+    "model_count": 5,
+    "matched_icon": "cohere"
+  },
+  {
+    "provider": "amazon",
+    "model_count": 5,
+    "matched_icon": "amazon"
+  },
+  {
+    "provider": "perplexity",
+    "model_count": 5,
+    "matched_icon": "perplexity"
+  },
+  {
+    "provider": "inclusionai",
+    "model_count": 4,
+    "matched_icon": "inclusionai"
+  },
+  {
+    "provider": "aion-labs",
+    "model_count": 4,
+    "matched_icon": "aionlabs"
+  },
+  {
+    "provider": "~anthropic",
+    "model_count": 4,
+    "matched_icon": "anthropic"
+  },
+  {
+    "provider": "bytedance-seed",
+    "model_count": 4,
+    "matched_icon": "bytedance"
+  },
+  {
+    "provider": "thedrummer",
+    "model_count": 4,
+    "matched_icon": "thedrummer"
+  },
+  {
+    "provider": "nousresearch",
+    "model_count": 4,
+    "matched_icon": "nousresearch"
+  },
+  {
+    "provider": "kwaipilot",
+    "model_count": 3,
+    "matched_icon": "kwaipilot"
+  },
+  {
+    "provider": "tencent",
+    "model_count": 3,
+    "matched_icon": "tencent"
+  },
+  {
+    "provider": "sao10k",
+    "model_count": 3,
+    "matched_icon": "sao10k"
+  },
+  {
+    "provider": "nex-agi",
+    "model_count": 2,
+    "matched_icon": "nex-agi"
+  },
+  {
+    "provider": "stepfun",
+    "model_count": 2,
+    "matched_icon": "stepfun"
+  },
+  {
+    "provider": "ibm-granite",
+    "model_count": 2,
+    "matched_icon": "ibm"
+  },
+  {
+    "provider": "~openai",
+    "model_count": 2,
+    "matched_icon": "openai"
+  },
+  {
+    "provider": "~google",
+    "model_count": 2,
+    "matched_icon": "google"
+  },
+  {
+    "provider": "xiaomi",
+    "model_count": 2,
+    "matched_icon": "xiaomi"
+  },
+  {
+    "provider": "arcee-ai",
+    "model_count": 2,
+    "matched_icon": "arcee"
+  },
+  {
+    "provider": "rekaai",
+    "model_count": 2,
+    "matched_icon": "reka"
+  },
+  {
+    "provider": "relace",
+    "model_count": 2,
+    "matched_icon": "relace"
+  },
+  {
+    "provider": "morph",
+    "model_count": 2,
+    "matched_icon": "morph"
+  },
+  {
+    "provider": "microsoft",
+    "model_count": 2,
+    "matched_icon": "microsoft"
+  },
+  {
+    "provider": "inflection",
+    "model_count": 2,
+    "matched_icon": "inflection"
+  },
+  {
+    "provider": "meituan",
+    "model_count": 1,
+    "matched_icon": "meituan"
+  },
+  {
+    "provider": "thinkingmachines",
+    "model_count": 1,
+    "matched_icon": "thinkingmachines"
+  },
+  {
+    "provider": "meta",
+    "model_count": 1,
+    "matched_icon": "meta"
+  },
+  {
+    "provider": "~x-ai",
+    "model_count": 1,
+    "matched_icon": "xai"
+  },
+  {
+    "provider": "sakana",
+    "model_count": 1,
+    "matched_icon": "sakana"
+  },
+  {
+    "provider": "perceptron",
+    "model_count": 1,
+    "matched_icon": "perceptron"
+  },
+  {
+    "provider": "~moonshotai",
+    "model_count": 1,
+    "matched_icon": "moonshot"
+  },
+  {
+    "provider": "inception",
+    "model_count": 1,
+    "matched_icon": "inception"
+  },
+  {
+    "provider": "upstage",
+    "model_count": 1,
+    "matched_icon": "upstage"
+  },
+  {
+    "provider": "writer",
+    "model_count": 1,
+    "matched_icon": "writer"
+  },
+  {
+    "provider": "allenai",
+    "model_count": 1,
+    "matched_icon": "allenai"
+  },
+  {
+    "provider": "deepcogito",
+    "model_count": 1,
+    "matched_icon": "deepcogito"
+  },
+  {
+    "provider": "ai21",
+    "model_count": 1,
+    "matched_icon": "ai21"
+  },
+  {
+    "provider": "bytedance",
+    "model_count": 1,
+    "matched_icon": "bytedance"
+  },
+  {
+    "provider": "cognitivecomputations",
+    "model_count": 1,
+    "matched_icon": "cognitivecomputations"
+  },
+  {
+    "provider": "baidu",
+    "model_count": 1,
+    "matched_icon": "baidu"
+  },
+  {
+    "provider": "anthracite-org",
+    "model_count": 1,
+    "matched_icon": "anthracite-org"
+  },
+  {
+    "provider": "mancer",
+    "model_count": 1,
+    "matched_icon": "mancer"
+  },
+  {
+    "provider": "undi95",
+    "model_count": 1,
+    "matched_icon": "undi95"
+  },
+  {
+    "provider": "gryphe",
+    "model_count": 1,
+    "matched_icon": "gryphe"
+  }
+]
