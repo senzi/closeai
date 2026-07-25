@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T01:30:14.815Z",
+  "generatedAt": "2026-07-25T02:29:43.757Z",
   "source": "openrouter.ai/api/v1/models + @lobehub/icons-static-png",
   "maxSelectable": 3,
   "providers": [
@@ -8,7 +8,7 @@
       "name": "OpenAI",
       "icon": "openai",
       "iconAvailable": true,
-      "modelCount": 67,
+      "modelCount": 69,
       "hot": true
     },
     {
@@ -16,7 +16,7 @@
       "name": "Anthropic",
       "icon": "anthropic",
       "iconAvailable": true,
-      "modelCount": 17,
+      "modelCount": 21,
       "hot": true
     },
     {
@@ -24,7 +24,7 @@
       "name": "Google",
       "icon": "google",
       "iconAvailable": true,
-      "modelCount": 30,
+      "modelCount": 32,
       "hot": true
     },
     {
@@ -48,7 +48,7 @@
       "name": "xAI（Grok）",
       "icon": "xai",
       "iconAvailable": true,
-      "modelCount": 5,
+      "modelCount": 6,
       "hot": true
     },
     {
@@ -56,7 +56,7 @@
       "name": "Moonshot Kimi（月之暗面）",
       "icon": "moonshot",
       "iconAvailable": true,
-      "modelCount": 7,
+      "modelCount": 8,
       "hot": true
     },
     {
@@ -84,18 +84,18 @@
       "hot": false
     },
     {
+      "id": "meta-llama",
+      "name": "Meta Llama",
+      "icon": "meta",
+      "iconAvailable": true,
+      "modelCount": 9,
+      "hot": false
+    },
+    {
       "id": "minimax",
       "name": "MiniMax",
       "icon": "minimax",
       "iconAvailable": true,
-      "modelCount": 8,
-      "hot": false
-    },
-    {
-      "id": "meta-llama",
-      "name": "Meta Llama",
-      "icon": null,
-      "iconAvailable": false,
       "modelCount": 8,
       "hot": false
     },
@@ -119,6 +119,14 @@
       "id": "cohere",
       "name": "Cohere",
       "icon": "cohere",
+      "iconAvailable": true,
+      "modelCount": 5,
+      "hot": false
+    },
+    {
+      "id": "bytedance-seed",
+      "name": "豆包（字节）",
+      "icon": "bytedance",
       "iconAvailable": true,
       "modelCount": 5,
       "hot": false
@@ -156,30 +164,6 @@
       "hot": false
     },
     {
-      "id": "~anthropic",
-      "name": "~anthropic",
-      "icon": "anthropic",
-      "iconAvailable": true,
-      "modelCount": 4,
-      "hot": false
-    },
-    {
-      "id": "bytedance-seed",
-      "name": "豆包（字节）",
-      "icon": "bytedance",
-      "iconAvailable": true,
-      "modelCount": 4,
-      "hot": false
-    },
-    {
-      "id": "thedrummer",
-      "name": "Thedrummer",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 4,
-      "hot": false
-    },
-    {
       "id": "nousresearch",
       "name": "Nous Research",
       "icon": "nousresearch",
@@ -204,14 +188,6 @@
       "hot": false
     },
     {
-      "id": "sao10k",
-      "name": "Sao10K",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 3,
-      "hot": false
-    },
-    {
       "id": "nex-agi",
       "name": "Nex-agi",
       "icon": null,
@@ -231,22 +207,6 @@
       "id": "ibm-granite",
       "name": "IBM Granite",
       "icon": "ibm",
-      "iconAvailable": true,
-      "modelCount": 2,
-      "hot": false
-    },
-    {
-      "id": "~openai",
-      "name": "~openai",
-      "icon": "openai",
-      "iconAvailable": true,
-      "modelCount": 2,
-      "hot": false
-    },
-    {
-      "id": "~google",
-      "name": "~google",
-      "icon": "google",
       "iconAvailable": true,
       "modelCount": 2,
       "hot": false
@@ -324,22 +284,6 @@
       "hot": false
     },
     {
-      "id": "meta",
-      "name": "Meta",
-      "icon": "meta",
-      "iconAvailable": true,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "~x-ai",
-      "name": "~x-ai",
-      "icon": "xai",
-      "iconAvailable": true,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
       "id": "sakana",
       "name": "Sakana",
       "icon": null,
@@ -352,14 +296,6 @@
       "name": "Perceptron",
       "icon": null,
       "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "~moonshotai",
-      "name": "~moonshotai",
-      "icon": "moonshot",
-      "iconAvailable": true,
       "modelCount": 1,
       "hot": false
     },
@@ -412,58 +348,10 @@
       "hot": false
     },
     {
-      "id": "bytedance",
-      "name": "Bytedance",
-      "icon": "bytedance",
-      "iconAvailable": true,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "cognitivecomputations",
-      "name": "Cognitivecomputations",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
       "id": "baidu",
       "name": "Baidu",
       "icon": "baidu",
       "iconAvailable": true,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "anthracite-org",
-      "name": "Anthracite-org",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "mancer",
-      "name": "Mancer",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "undi95",
-      "name": "Undi95",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "gryphe",
-      "name": "Gryphe",
-      "icon": null,
-      "iconAvailable": false,
       "modelCount": 1,
       "hot": false
     }

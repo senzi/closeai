@@ -44,14 +44,37 @@ const ALIAS_MAP = {
   'bytedance-seed': 'bytedance',
   'ibm-granite': 'ibm',
   'amazon': 'aws',         // Amazon Nova 系列
-  '~anthropic': 'anthropic',
-  '~openai': 'openai',
-  '~google': 'google',
-  '~x-ai': 'xai',
-  '~moonshotai': 'moonshot',
-  'arcee-ai': 'arcee',
-  'rekaai': 'reka',
+  'meta-llama': 'meta',
 };
+
+/**
+ * ID 归一化合并规则（去重）：
+ * - `~` 前缀是 OpenRouter 的变体 slug（如 ~openai 与 openai 重复），去掉前缀合并进主条目；
+ * - 下同义 ID 合并（modelCount 累加）。
+ */
+const MERGE_MAP = {
+  'meta': 'meta-llama',
+  'bytedance': 'bytedance-seed',
+};
+
+function normalizeId(raw) {
+  const stripped = raw.startsWith('~') ? raw.slice(1) : raw;
+  return MERGE_MAP[stripped] ?? stripped;
+}
+
+/**
+ * 排除清单：个人微调作者 / 社区上传者（模型多为第三方微调，
+ * 不是「谁家的 AI」语义下的供应商），不出现在选择列表。
+ */
+const EXCLUDE_IDS = new Set([
+  'thedrummer',
+  'sao10k',
+  'undi95',
+  'gryphe',
+  'mancer',
+  'cognitivecomputations',
+  'anthracite-org',
+]);
 
 /** provider ID → 展示名（未收录的用 capitalize 兜底） */
 const NAME_MAP = {
@@ -83,8 +106,12 @@ const NAME_MAP = {
 };
 
 /**
- * 热门供应商：默认直接展示（无需展开）。
- * 顺序即展示顺序。可在此调整，重新运行脚本即可。
+ * 热门供应商：默认直接展示（无需展开），顺序即展示顺序。
+ *
+ * 排名规则说明：OpenRouter /api/v1/models 没有热度/用量字段，
+ * 唯一可用的排序信号是 modelCount（在架模型数）。
+ * 因此「热门」是人工产品判断（真实用户量 ≠ 模型数，如豆包/Kimi），
+ * 非热门列表按 modelCount 降序。调整顺序后重新运行脚本即可。
  */
 const HOT_PROVIDERS = [
   'openai',
@@ -112,12 +139,14 @@ async function fetchOpenRouterModels() {
   return json;
 }
 
-/** 从原始 models 响应统计 provider → 模型数 */
+/** 从原始 models 响应统计 provider → 模型数（归一化去重 + 排除个人作者） */
 function countProviders(modelsRaw) {
   const counts = new Map();
   for (const m of modelsRaw.data ?? []) {
-    const id = typeof m.id === 'string' ? m.id.split('/')[0] : null;
-    if (!id) continue;
+    const raw = typeof m.id === 'string' ? m.id.split('/')[0] : null;
+    if (!raw) continue;
+    const id = normalizeId(raw);
+    if (EXCLUDE_IDS.has(id)) continue;
     counts.set(id, (counts.get(id) ?? 0) + 1);
   }
   return [...counts.entries()]
