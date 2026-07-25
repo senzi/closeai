@@ -295,11 +295,12 @@ interface PersonalityType {
 
 ## 7. 检查清单
 
-- [ ] 24 道题全部编写完成（每维度 6 题，含题组变体）
-- [ ] 抽题算法实现（每维度抽 2、跨维度打乱）
-- [ ] 评分算法实现（含权重与平局规则）+ 单元测试
-- [ ] 16 种类型全部定义（名称、描述、诊断、忠告）
-- [ ] 结果页数据结构定义
+- [x] 24 道题全部编写完成（每维度 6 题，含题组变体）— 2026-07-25：`lib/quiz.ts` `QUESTION_BANK`
+- [x] 抽题算法实现（每维度抽 2、跨维度打乱）— 2026-07-25：`drawQuestions()`，可注入 rng
+- [x] 评分算法实现（含权重与平局规则）+ 单元测试 — 2026-07-25：`calculateResult()`；`scripts/test-quiz.mjs` 10/10 通过（node --test）
+- [x] 16 种类型全部定义（名称、描述、诊断、忠告）— 2026-07-25：`lib/personalities.ts`，含 `isValidTypeCode` 供 P3 直链校验
+- [x] 结果页数据结构定义 — 2026-07-25：`QuizResult` / `DimensionScore` / `QuizAnswer`
+- [x] Interrogation → Verdict 数据流打通 — 2026-07-25：答题流程真实跑通（视觉仍是占位，随 P2 重构）
 
 ---
 
