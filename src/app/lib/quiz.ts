@@ -132,7 +132,7 @@ export const QUESTION_BANK: Question[] = [
       {
         text: '如果明天起所有 AI 工具消失一周，你的工作会？',
         options: [
-          { label: '效率腰斩，很多事做不动', value: 'D', trait: '深度嵌入' },
+          { label: '完蛋啦完蛋啦完蛋啦', value: 'D', trait: '深度嵌入' },
           { label: '照常运转，只是慢一点', value: 'A', trait: '能力自持' },
         ],
       },
@@ -216,7 +216,7 @@ export const QUESTION_BANK: Question[] = [
     id: 'BS-3', dimension: 'BS', weight: 1.0,
     variants: [
       {
-        text: '有人说「AGI 十年内到来」，你觉得？',
+        text: '有人说「AGI 这一两年内就会到来」，你觉得？',
         options: [
           { label: '很可能，曲线不骗人', value: 'B', trait: '指数信仰' },
           { label: '融资 PPT 看多了', value: 'S', trait: '冷静剂' },
