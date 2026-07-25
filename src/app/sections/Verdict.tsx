@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import type { QuizResult } from '@/app/lib/quiz';
 import { getPersonalityByCode } from '@/app/lib/personalities';
 import TypeBadge from '@/app/components/TypeBadge';
+import TypeGlyph from '@/app/components/TypeGlyph';
 import DimensionAxis from '@/app/components/DimensionAxis';
 import GlitchText from '@/app/components/GlitchText';
 import type { ProviderSelection } from '@/app/types';
@@ -22,6 +23,12 @@ const PROVIDER_MAP: Record<string, { name: string; icon: string | null; iconAvai
     ((providersData as { providers: { id: string; name: string; icon: string | null; iconAvailable: boolean }[] }).providers)
       .map((p) => [p.id, p]),
   );
+
+/** 占位图标的首字符（与 ProviderPicker 的 monogram 规则一致） */
+function monogram(name: string): string {
+  const m = name.match(/[A-Za-z0-9]/);
+  return m ? m[0].toUpperCase() : name.charAt(0);
+}
 
 const DIMENSION_META: Record<string, { left: string; right: string; leftPole: string }> = {
   AD: { left: 'AUTONOMY', right: 'DEPENDENCY', leftPole: 'A' },
@@ -112,8 +119,8 @@ export default function Verdict({ result, providers, onShare, onRestart }: Verdi
           animate={{ opacity: 1 }}
           transition={{ delay: t0 + 1.5, duration: 0.5 }}
         >
-          <h2 className="font-sans text-2xl text-white">
-            {personality.emoji}{' '}
+          <h2 className="font-sans text-2xl text-white flex items-center gap-3">
+            <TypeGlyph code={result.code} size={30} className="text-white shrink-0" />
             <GlitchText text={personality.nameZh} intensity="low" trigger="mount" />
           </h2>
           <p className="font-sans text-sm text-neutral-500 tracking-wider uppercase">
@@ -148,14 +155,14 @@ export default function Verdict({ result, providers, onShare, onRestart }: Verdi
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={`/icons/providers/${p.icon}.png`} alt="" width={14} height={14} />
                 ) : (
-                  <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">?</span>
+                  <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">{monogram(p.name)}</span>
                 )}
                 {p.name}
               </span>
             ))}
             {providers?.custom && (
               <span className="inline-flex items-center gap-2 border border-neutral-700 px-3 py-1 text-xs text-neutral-300 font-sans">
-                <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">?</span>
+                <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">{monogram(providers.custom)}</span>
                 {providers.custom}
               </span>
             )}

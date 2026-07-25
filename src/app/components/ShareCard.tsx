@@ -4,6 +4,7 @@ import type { QuizResult } from '@/app/lib/quiz';
 import type { PersonalityType } from '@/app/lib/personalities';
 import type { ProviderSelection } from '@/app/types';
 import providersData from '@/app/lib/providers.json';
+import TypeGlyph from '@/app/components/TypeGlyph';
 
 interface Provider {
   id: string;
@@ -16,6 +17,12 @@ const PROVIDER_MAP: Record<string, Provider> = Object.fromEntries(
   ((providersData as { providers: Provider[] }).providers).map((p) => [p.id, p]),
 );
 
+/** 占位图标的首字符（与 ProviderPicker 的 monogram 规则一致） */
+function monogram(name: string): string {
+  const m = name.match(/[A-Za-z0-9]/);
+  return m ? m[0].toUpperCase() : name.charAt(0);
+}
+
 const DIMENSION_META: Record<string, { left: string; right: string }> = {
   AD: { left: 'AUTONOMY', right: 'DEPENDENCY' },
   BS: { left: 'BELIEF', right: 'SKEPTICISM' },
@@ -27,6 +34,8 @@ interface ShareCardProps {
   result: QuizResult;
   personality: PersonalityType;
   providers: ProviderSelection;
+  /** 结果页 permalink 的二维码 dataURL（P3 修正：分享图带域名二维码） */
+  qrDataUrl?: string | null;
 }
 
 /**
@@ -36,7 +45,7 @@ interface ShareCardProps {
  * 「下载图片」用 snapdom 截取本组件 DOM 导出 PNG。
  * 注意：样式全部内联/原子类，避免 snapdom 捕获外部样式表差异。
  */
-export default function ShareCard({ result, personality, providers }: ShareCardProps) {
+export default function ShareCard({ result, personality, providers, qrDataUrl }: ShareCardProps) {
   const selectedProviders = providers.selected
     .map((id) => PROVIDER_MAP[id])
     .filter(Boolean);
@@ -67,9 +76,10 @@ export default function ShareCard({ result, personality, providers }: ShareCardP
 
       {/* 名称 + Tagline */}
       <div className="text-center">
-        <div className="text-xl">
-          {personality.emoji} {personality.nameZh}
-          <span className="text-neutral-500 text-sm ml-3 uppercase tracking-wider">
+        <div className="text-xl flex items-center justify-center gap-3">
+          <TypeGlyph code={result.code} size={26} className="text-white shrink-0" />
+          {personality.nameZh}
+          <span className="text-neutral-500 text-sm ml-1 uppercase tracking-wider">
             {personality.nameEn}
           </span>
         </div>
@@ -88,14 +98,14 @@ export default function ShareCard({ result, personality, providers }: ShareCardP
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={`/icons/providers/${p.icon}.png`} alt="" width={14} height={14} />
               ) : (
-                <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">?</span>
+                <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">{monogram(p.name)}</span>
               )}
               {p.name}
             </span>
           ))}
           {providers.custom && (
             <span className="inline-flex items-center gap-2 border border-neutral-700 px-3 py-1 text-xs text-neutral-300">
-              <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">?</span>
+              <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">{monogram(providers.custom)}</span>
               {providers.custom}
             </span>
           )}
@@ -125,13 +135,24 @@ export default function ShareCard({ result, personality, providers }: ShareCardP
         })}
       </div>
 
-      {/* 底部 */}
+      {/* 底部：口号 + 域名二维码（黑码白底，保证扫码可靠性） */}
       <div className="h-px bg-neutral-800" />
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-neutral-500">How Close Are You to AI?</span>
-        <span className="font-mono text-xs text-neutral-700 tracking-widest">
-          THINK WITH CARE · SHARE WITH STYLE
-        </span>
+      <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-1">
+          <span className="text-sm text-neutral-500">How Close Are You to AI?</span>
+          <span className="font-mono text-xs text-neutral-700 tracking-widest">
+            THINK WITH CARE · SHARE WITH STYLE
+          </span>
+        </div>
+        {qrDataUrl && (
+          <div className="flex flex-col items-center gap-1.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={qrDataUrl} alt="closeai.moe 二维码" width={76} height={76} className="rounded-[2px]" />
+            <span className="font-mono text-[10px] text-neutral-600 tracking-widest">
+              扫码测测你有多 CLOSE
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

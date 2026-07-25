@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { snapdom } from '@zumer/snapdom';
 import QRCode from 'qrcode';
@@ -25,9 +25,26 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
   const [notice, setNotice] = useState('');
   const [exporting, setExporting] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [cardQr, setCardQr] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const personality = result ? getPersonalityByCode(result.code) : undefined;
+  const permalink = result ? generatePermalink(result.code) : '';
+
+  // 分享卡上的域名二维码（P3 修正）：黑码白底保证扫码可靠性。
+  // hook 必须放在 early-return 之前，因此 permalink 为空时跳过。
+  useEffect(() => {
+    if (!permalink) return;
+    let cancelled = false;
+    QRCode.toDataURL(permalink, {
+      width: 200,
+      margin: 1,
+      color: { dark: '#000000', light: '#ffffff' },
+    }).then((url) => {
+      if (!cancelled) setCardQr(url);
+    });
+    return () => { cancelled = true; };
+  }, [permalink]);
 
   const toast = (msg: string) => {
     setNotice(msg);
@@ -52,8 +69,6 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
     );
   }
 
-  const permalink = generatePermalink(result.code);
-
   const copyText = async (text: string, msg: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -63,21 +78,63 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
     }
   };
 
-  const handleDownload = async () => {
+  /** 用 snapdom 把分享卡渲染成 PNG Blob（下载与系统分享共用） */
+  const renderCardBlob = async (): Promise<Blob> => {
     const el = document.getElementById('share-card');
-    if (!el || exporting) return;
+    if (!el) throw new Error('share-card not found');
+    const capture = await snapdom(el, { scale: 2, backgroundColor: '#000000' });
+    const img = await capture.toPng();
+    const res = await fetch(img.src);
+    return res.blob();
+  };
+
+  const handleDownload = async () => {
+    if (exporting) return;
     setExporting(true);
     try {
-      const capture = await snapdom(el, { scale: 2, backgroundColor: '#000000' });
-      const img = await capture.toPng();
+      const blob = await renderCardBlob();
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.download = `closeai-${result.code}-${Date.now()}.png`;
-      link.href = img.src;
+      link.href = url;
       link.click();
+      URL.revokeObjectURL(url);
       toast('图片已下载');
     } catch (err) {
       console.error('export failed', err);
       toast('导出失败，请重试');
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  /**
+   * 系统级分享（可带图）：走 Web Share API，把分享卡 PNG 直接递给系统分享面板，
+   * 用户在目标 App（微信/微博/QQ…）里可删可改。仅移动端/部分桌面浏览器支持。
+   * 微博/Twitter/QQ 的 URL 分享协议本身不支持传图，只能文字+链接。
+   */
+  const canNativeShare =
+    typeof navigator !== 'undefined' &&
+    typeof navigator.share === 'function' &&
+    typeof navigator.canShare === 'function';
+
+  const handleNativeShare = async () => {
+    if (exporting) return;
+    setExporting(true);
+    try {
+      const blob = await renderCardBlob();
+      const file = new File([blob], `closeai-${result.code}.png`, { type: 'image/png' });
+      const payload = { files: [file], text: `${shareText}\n${permalink}` };
+      if (!navigator.canShare(payload)) {
+        toast('当前浏览器不支持带图分享，请用下载图片');
+        return;
+      }
+      await navigator.share(payload);
+    } catch (err) {
+      if ((err as Error).name !== 'AbortError') {
+        console.error('native share failed', err);
+        toast('分享失败，请重试');
+      }
     } finally {
       setExporting(false);
     }
@@ -132,26 +189,38 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
       <div className="flex flex-col items-center gap-5 px-4 py-8 max-h-screen overflow-y-auto">
         {/* 分享卡预览（缩放适配屏幕） */}
         <div className="origin-top scale-[0.52] sm:scale-[0.65] md:scale-75 lg:scale-[0.8] -mb-[38%] sm:-mb-[28%] md:-mb-[20%] lg:-mb-[16%]">
-          <ShareCard result={result} personality={personality} providers={providers} />
+          <ShareCard result={result} personality={personality} providers={providers} qrDataUrl={cardQr} />
         </div>
 
-        {/* 分享矩阵 */}
-        <div className="flex flex-wrap justify-center gap-3 max-w-xl">
-          <button className={BTN} onClick={handleDownload} disabled={exporting}>
-            {exporting ? '生成中…' : '下载图片'}
-          </button>
-          <button className={BTN} onClick={() => copyText(permalink, '链接已复制')}>
-            复制链接
-          </button>
-          <button className={BTN} onClick={() => copyText(`${shareText}\n\n${permalink}`, '文案已复制')}>
-            复制文案
-          </button>
-          <button className={BTN} onClick={handleWeibo}>微博</button>
-          <button className={BTN} onClick={handleTwitter}>Twitter / X</button>
-          <button className={BTN} onClick={handleQQ}>QQ</button>
-          <button className={BTN} onClick={handleWechat}>
-            {qrDataUrl ? '收起二维码' : '微信'}
-          </button>
+        {/* 分享矩阵：两行——第一行图片与素材，第二行社交渠道（P3 修正） */}
+        <div className="flex flex-col items-center gap-3 max-w-xl">
+          <div className="flex flex-wrap justify-center gap-3">
+            <button className={BTN} onClick={handleDownload} disabled={exporting}>
+              {exporting ? '生成中…' : '下载图片'}
+            </button>
+            {canNativeShare && (
+              <button className={BTN} onClick={handleNativeShare} disabled={exporting}>
+                系统分享（可带图）
+              </button>
+            )}
+            <button className={BTN} onClick={() => copyText(permalink, '链接已复制')}>
+              复制链接
+            </button>
+            <button className={BTN} onClick={() => copyText(`${shareText}\n\n${permalink}`, '文案已复制')}>
+              复制文案
+            </button>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button className={BTN} onClick={handleWeibo}>微博</button>
+            <button className={BTN} onClick={handleTwitter}>Twitter / X</button>
+            <button className={BTN} onClick={handleQQ}>QQ</button>
+            <button className={BTN} onClick={handleWechat}>
+              {qrDataUrl ? '收起二维码' : '微信'}
+            </button>
+          </div>
+          <p className="font-sans text-[11px] text-neutral-600 tracking-wider">
+            微博 / Twitter / QQ 的链接分享不支持传图，发图请用「下载图片」或「系统分享」
+          </p>
         </div>
 
         {/* 微信二维码 */}

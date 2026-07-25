@@ -20,22 +20,31 @@ interface ProviderPickerProps {
 const MAX_SELECT = (providersData as { maxSelectable: number }).maxSelectable ?? 3;
 const PROVIDERS = (providersData as { providers: Provider[] }).providers;
 
-/** 占位图标：灰色问号方块（无图标 provider 与自定义项共用） */
-function PlaceholderIcon({ size = 20 }: { size?: number }) {
+/** 占位图标：名字首字符的灰色方块（无图标 provider 与自定义项共用）；inverted 用于选中反色态 */
+function PlaceholderIcon({ label = '?', size = 20, inverted = false }: { label?: string; size?: number; inverted?: boolean }) {
   return (
     <span
-      className="inline-flex items-center justify-center rounded-[4px] bg-neutral-800 text-neutral-500 font-mono"
-      style={{ width: size, height: size, fontSize: size * 0.6 }}
+      className={`inline-flex items-center justify-center rounded-[4px] font-mono ${
+        inverted ? 'bg-black text-white' : 'bg-neutral-800 text-neutral-500'
+      }`}
+      style={{ width: size, height: size, fontSize: size * 0.55 }}
     >
-      ?
+      {label}
     </span>
   );
 }
 
-function ProviderIcon({ provider, size = 20 }: { provider: Provider; size?: number }) {
+/** 取首字符做 monogram：优先拉丁字母/数字大写，否则取第一个字符（如中文名） */
+function monogram(name: string): string {
+  const m = name.match(/[A-Za-z0-9]/);
+  return m ? m[0].toUpperCase() : name.charAt(0);
+}
+
+function ProviderIcon({ provider, size = 20, inverted = false }: { provider: Provider; size?: number; inverted?: boolean }) {
   if (!provider.iconAvailable || !provider.icon) {
-    return <PlaceholderIcon size={size} />;
+    return <PlaceholderIcon label={monogram(provider.name)} size={size} inverted={inverted} />;
   }
+  // 选中态徽章反色为白底，图标需同步反色，否则白色图标消失在白底上
   // eslint-disable-next-line @next/next/no-img-element
   return (
     <img
@@ -43,7 +52,7 @@ function ProviderIcon({ provider, size = 20 }: { provider: Provider; size?: numb
       alt=""
       width={size}
       height={size}
-      className="rounded-[4px] invert-0"
+      className={`rounded-[4px] ${inverted ? 'invert' : ''}`}
       loading="lazy"
     />
   );
@@ -70,14 +79,24 @@ export default function ProviderPicker({ onDone }: ProviderPickerProps) {
     return list.filter((p) => p.id.includes(q) || p.name.toLowerCase().includes(q));
   }, [query]);
 
+  // 自定义「其他」也占 1 个名额：选中 + 自定义合计不超过 MAX_SELECT（P3 修正）
+  const customCount = custom.trim() ? 1 : 0;
+  const totalCount = selected.length + customCount;
+  const selectLimit = MAX_SELECT - customCount;
+  const customFull = selected.length >= MAX_SELECT;
+
   const toggle = (id: string) => {
     setHint('');
     if (selected.includes(id)) {
       setSelected(selected.filter((s) => s !== id));
       return;
     }
-    if (selected.length >= MAX_SELECT) {
-      setHint('最多 3 家——喜新厌旧一点');
+    if (selected.length >= selectLimit) {
+      setHint(
+        customCount > 0
+          ? `最多 ${MAX_SELECT} 家（自定义也占 1 个名额）`
+          : '最多 3 家——喜新厌旧一点',
+      );
       return;
     }
     setSelected([...selected, id]);
@@ -85,7 +104,7 @@ export default function ProviderPicker({ onDone }: ProviderPickerProps) {
 
   const Badge = ({ provider, large = false }: { provider: Provider; large?: boolean }) => {
     const active = selected.includes(provider.id);
-    const disabled = !active && selected.length >= MAX_SELECT;
+    const disabled = !active && selected.length >= selectLimit;
     return (
       <button
         onClick={() => toggle(provider.id)}
@@ -100,7 +119,7 @@ export default function ProviderPicker({ onDone }: ProviderPickerProps) {
               : 'border-neutral-700 text-neutral-400 hover:border-white hover:text-white'}
         `}
       >
-        <ProviderIcon provider={provider} size={large ? 20 : 14} />
+        <ProviderIcon provider={provider} size={large ? 20 : 14} inverted={active} />
         {provider.name}
       </button>
     );
@@ -153,22 +172,23 @@ export default function ProviderPicker({ onDone }: ProviderPickerProps) {
         </div>
       )}
 
-      {/* 自定义 */}
+      {/* 自定义（占 1 个名额；已选满 3 家时禁用） */}
       <div className="flex items-center gap-3">
-        <PlaceholderIcon size={20} />
+        <PlaceholderIcon label={custom.trim() ? monogram(custom.trim()) : '✎'} size={20} />
         <input
           type="text"
           value={custom}
-          onChange={(e) => setCustom(e.target.value)}
-          placeholder="其他：自己填一个（可空）"
+          onChange={(e) => { setCustom(e.target.value); setHint(''); }}
+          placeholder={customFull ? '名额已满——先取消一家' : '其他：自己填一个（可空，占 1 个名额）'}
           maxLength={20}
-          className="w-56 bg-transparent border-b border-neutral-800 focus:border-white outline-none px-1 py-2 font-sans text-sm text-white placeholder:text-neutral-700 transition-colors"
+          disabled={customFull}
+          className="w-64 bg-transparent border-b border-neutral-800 focus:border-white outline-none px-1 py-2 font-sans text-sm text-white placeholder:text-neutral-700 transition-colors disabled:opacity-40"
         />
       </div>
 
       {/* 提示 + 操作 */}
       <div className="h-6 font-sans text-sm text-neutral-500">
-        {hint || (selected.length > 0 ? `已选 ${selected.length}/${MAX_SELECT}` : '')}
+        {hint || (totalCount > 0 ? `已选 ${totalCount}/${MAX_SELECT}` : '')}
       </div>
       <div className="flex gap-6">
         <button
