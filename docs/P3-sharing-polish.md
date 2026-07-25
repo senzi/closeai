@@ -129,9 +129,9 @@ export async function GET(req: NextRequest) {
 └────────────────────┘
 ```
 
-### 1.5 供应商标签（联动 P1 附加题）
+### 1.5 供应商标签（联动附加题）
 
-如果用户完成了供应商选择（见 `P1-dimension-system.md` §8），分享图在 Tagline 下方增加一行**厂商标签**：
+如果用户完成了供应商选择，分享图在 Tagline 下方增加一行**厂商标签**：
 
 ```
    [🬭 OpenAI]  [🬭 DeepSeek]  [🬭 Kimi]     ← 图标 + 名称，最多 3 个
@@ -141,6 +141,15 @@ export async function GET(req: NextRequest) {
 - 无图标的 provider 与自定义项使用统一的灰色问号占位图标
 - OG 服务端生成时直接读取本地 PNG（`fs` → data URL 或 `arrayBuffer`），不走外部 CDN，保证生成速度和稳定性
 - 用户跳过该题则不渲染此行，布局自动收拢
+
+### 1.6 供应商选择题（归属修订 2026-07-25）
+
+供应商选择题（「第 9 问」）**整体归 P3 实现**，内容设计见 `P1-dimension-system.md` §8：
+
+- 位置：8 道维度题答完后、进入 Verdict 前，作为 Interrogation 的内部第 9 步
+- UI：热门 7 家大徽章（带图标）→「展开全部」小徽章墙（带搜索）→ 自定义输入（占位图标）
+- 约束：最多 3 家、可跳过、选中顺序保留
+- 数据：`ProviderSelection { selected: string[], custom: string }`，随 QuizResult 一起流向 Verdict / Epilogue / ShareCard
 
 ---
 
@@ -372,15 +381,15 @@ export async function generateMetadata({ params }: { params: { code: string } })
 
 ## 7. 检查清单
 
-- [ ] `/api/og` 路由实现（1200×630 + 1:1 两种尺寸）
-- [ ] 随机文案模板库（16 种类型 × 每套 4 个插槽 × 每插槽 3-4 变体）
-- [ ] 结果页直链逻辑（`?r=` 参数处理）
-- [ ] 复制链接功能
-- [ ] 下载图片功能
-- [ ] 微博分享适配
-- [ ] Twitter/X 分享适配
-- [ ] QQ 分享适配
-- [ ] 微信二维码分享
-- [ ] SEO Meta 标签
-- [ ] 动态 OG 图（根据结果编码）
-- [ ] 基础数据分析（分享次数、来源平台）
+- [x] `/api/og` 路由实现（1200×630 + 1:1 两种尺寸）— ⏸ 暂缓（2026-07-25）：分享图改由客户端 snapdom 截取 ShareCard 生成（静态部署友好、CJK 字体零成本）；服务端 OG 依赖 CJK 字体子集化，成本高，待部署到 Vercel 后再评估
+- [x] 随机文案模板库 — 2026-07-25 实现为「共享插槽池 + 按类型评价池」（`lib/copy.ts`）：8 开场 + 3 揭示模板 + 16×2 评价 + 6 结尾，组合空间足够且维护量可控；未达到「每类型独立 4 插槽」的完整形态，后续可扩充
+- [x] 结果页直链逻辑（`?r=` 参数处理）— 2026-07-25：校验编码 → 合成只读结果直跳 VERDICT → 隐藏维度轴 + 「这是朋友分享的测试结果」+「我也测测」
+- [x] 复制链接功能 — 2026-07-25
+- [x] 下载图片功能 — 2026-07-25：snapdom 截取 ShareCard，scale 2，黑底 PNG
+- [x] 微博分享适配 — 2026-07-25：service.weibo.com share 页（url + title 预填）
+- [x] Twitter/X 分享适配 — 2026-07-25：intent/tweet（文案 + 链接）
+- [x] QQ 分享适配 — 2026-07-25：connect.qq.com shareqq（url + title + summary）
+- [x] 微信二维码分享 — 2026-07-25：qrcode 本地生成白-on-黑 data URL，内联展示
+- [x] SEO Meta 标签 — 2026-07-25：metadataBase + openGraph + twitter（静态版）
+- [ ] 动态 OG 图（根据结果编码）— 暂缓，同 /api/og 评估
+- [ ] 基础数据分析（分享次数、来源平台）— 待做（建议隐私友好方案，如 Plausible）

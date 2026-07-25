@@ -316,9 +316,8 @@ interface PersonalityType {
 
 ## 8. 附加题：模型供应商选择（非计分）
 
-> 归属决策（2026-07-25）：供应商选择是**答题流程中的一道附加题**，归 P1 管内容；
-> 交互样式（徽章墙、展开动画）随 P2 的视觉体系实现；
-> 结果在 Verdict 页与分享卡上的展示归 P3（见 `P3-sharing-polish.md` §1.5）。
+> 归属决策（2026-07-25 修订）：供应商选择**整体归入 P3**（含题目 UI），
+> 见 `P3-sharing-polish.md` §1.6。P1 只保留本节作为内容设计参考。
 > 它**不参与**四维评分——它回答的是「你和谁的 AI 亲近」，不是「你多亲近」。
 
 ### 8.1 题目定位
@@ -383,7 +382,7 @@ interface ProviderSelection {
 - [x] 同步脚本 `scripts/sync-providers.mjs`
 - [x] OpenRouter 数据缓存 + lobehub 图标清单
 - [x] 热门 7 家图标全部就位（`public/icons/providers/`）
-- [ ] 供应商选择 UI（随 P2 徽章墙样式实现）
-- [ ] 占位图标组件（灰色问号方块，SVG）
-- [ ] 结果页展示（随 P2 Verdict 实现）
-- [ ] 分享图展示（随 P3 实现）
+- [x] 供应商选择 UI — 2026-07-25 随 P3 实现（`components/ProviderPicker.tsx`，归属已修订为 P3）
+- [x] 占位图标组件（灰色问号方块）— 2026-07-25
+- [x] 结果页展示 — 2026-07-25（Verdict 标签行）
+- [x] 分享图展示 — 2026-07-25（ShareCard 供应商标签行）

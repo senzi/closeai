@@ -13,9 +13,11 @@ import {
   type QuizResult,
 } from '@/app/lib/quiz';
 import ProgressRing from '@/app/components/ProgressRing';
+import ProviderPicker from '@/app/components/ProviderPicker';
+import type { ProviderSelection } from '@/app/types';
 
 interface InterrogationProps {
-  onComplete: (result: QuizResult) => void;
+  onComplete: (result: QuizResult, providers: ProviderSelection) => void;
 }
 
 /** 碎裂切片数（P2 §3.3：5-7 个水平条） */
@@ -72,8 +74,11 @@ function ShatterText({ text }: { text: string }) {
 export default function Interrogation({ onComplete }: InterrogationProps) {
   const questions = useMemo<DrawnQuestion[]>(() => drawQuestions(), []);
   const [index, setIndex] = useState(0);
+  // 内部步骤：8 道维度题 → 第 9 问供应商选择（P3 §1.6）
+  const [step, setStep] = useState<'questions' | 'providers'>('questions');
   const [shatteringLabel, setShatteringLabel] = useState<string | null>(null);
   const answersRef = useRef<QuizAnswer[]>([]);
+  const resultRef = useRef<QuizResult | null>(null);
   const questionShownAtRef = useRef<number>(Date.now());
   const advancingRef = useRef(false);
 
@@ -92,7 +97,9 @@ export default function Interrogation({ onComplete }: InterrogationProps) {
     answersRef.current.push(makeAnswer(question, option, thinkingMs));
 
     if (isLast) {
-      onComplete(calculateResult(answersRef.current));
+      // 8 题答完 → 先算分存好，进入供应商选择第 9 问
+      resultRef.current = calculateResult(answersRef.current);
+      setStep('providers');
       return;
     }
     questionShownAtRef.current = Date.now();
@@ -114,6 +121,11 @@ export default function Interrogation({ onComplete }: InterrogationProps) {
     setTimeout(() => advance(option), SHATTER_MS + 120);
   };
 
+  const handleProvidersDone = (selection: ProviderSelection) => {
+    if (!resultRef.current) return;
+    onComplete(resultRef.current, selection);
+  };
+
   // 组件卸载兜底清理（onComplete 后 section 离场）
   useEffect(() => () => { advancingRef.current = false; }, []);
 
@@ -125,11 +137,17 @@ export default function Interrogation({ onComplete }: InterrogationProps) {
       exit={{ opacity: 0, filter: 'blur(10px)' }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* 进度环（P2 §2.3） */}
-      <div className="absolute top-8 right-8">
-        <ProgressRing current={index + 1} total={TOTAL_QUESTIONS} />
-      </div>
+      {/* 进度环（P2 §2.3），仅答题阶段显示 */}
+      {step === 'questions' && (
+        <div className="absolute top-8 right-8">
+          <ProgressRing current={index + 1} total={TOTAL_QUESTIONS} />
+        </div>
+      )}
 
+      {/* 第 9 问：供应商选择（P3 §1.6） */}
+      {step === 'providers' ? (
+        <ProviderPicker onDone={handleProvidersDone} />
+      ) : (
       <AnimatePresence mode="wait">
         <motion.div
           key={question.id + index}
@@ -176,6 +194,7 @@ export default function Interrogation({ onComplete }: InterrogationProps) {
           </div>
         </motion.div>
       </AnimatePresence>
+      )}
     </motion.div>
   );
 }

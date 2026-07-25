@@ -21,8 +21,23 @@ const notoSansSC = Noto_Sans_SC({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://closeai.moe"),
   title: "CloseAI.moe — How Close Are You to AI?",
-  description: "测测你与 AI 的亲近程度。一个关于人与 AI 关系的互动测试。",
+  description:
+    "测测你与 AI 的亲近程度。8 道题，4 个字母，一个关于人与 AI 关系的互动测试。",
+  openGraph: {
+    title: "CloseAI.moe — How Close Are You to AI?",
+    description: "测测你与 AI 的亲近程度。8 道题，4 个字母。",
+    url: "https://closeai.moe",
+    siteName: "CloseAI.moe",
+    locale: "zh_CN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "CloseAI.moe — How Close Are You to AI?",
+    description: "测测你与 AI 的亲近程度。8 道题，4 个字母。",
+  },
 };
 
 export default function RootLayout({

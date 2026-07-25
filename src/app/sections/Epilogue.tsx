@@ -1,12 +1,125 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { snapdom } from '@zumer/snapdom';
+import QRCode from 'qrcode';
+import type { QuizResult } from '@/app/lib/quiz';
+import { getPersonalityByCode } from '@/app/lib/personalities';
+import { generateShareCopy, generatePermalink } from '@/app/lib/copy';
+import type { ProviderSelection } from '@/app/types';
+import ShareCard from '@/app/components/ShareCard';
 
 interface EpilogueProps {
+  result: QuizResult | null;
+  providers: ProviderSelection;
   onRestart: () => void;
 }
 
-export default function Epilogue({ onRestart }: EpilogueProps) {
+/**
+ * 尾声：分享与重测（P3）
+ *
+ * 分享矩阵（P3 §3.1）：复制链接 / 下载图片 / 复制文案 / 微博 / Twitter / QQ / 微信二维码
+ */
+export default function Epilogue({ result, providers, onRestart }: EpilogueProps) {
+  const [notice, setNotice] = useState('');
+  const [exporting, setExporting] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const personality = result ? getPersonalityByCode(result.code) : undefined;
+
+  const toast = (msg: string) => {
+    setNotice(msg);
+    setTimeout(() => setNotice(''), 2500);
+  };
+
+  if (!result || !personality) {
+    return (
+      <motion.div
+        className="fixed inset-0 z-20 flex items-center justify-center bg-black"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, transition: { duration: 1 } }}
+      >
+        <button
+          onClick={onRestart}
+          className="px-8 py-4 border border-neutral-700 text-neutral-300 hover:bg-white hover:text-black transition-all duration-300 font-sans text-sm tracking-wider"
+        >
+          再测一次
+        </button>
+      </motion.div>
+    );
+  }
+
+  const permalink = generatePermalink(result.code);
+
+  const copyText = async (text: string, msg: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast(msg);
+    } catch {
+      toast('复制失败，请手动复制');
+    }
+  };
+
+  const handleDownload = async () => {
+    const el = document.getElementById('share-card');
+    if (!el || exporting) return;
+    setExporting(true);
+    try {
+      const capture = await snapdom(el, { scale: 2, backgroundColor: '#000000' });
+      const img = await capture.toPng();
+      const link = document.createElement('a');
+      link.download = `closeai-${result.code}-${Date.now()}.png`;
+      link.href = img.src;
+      link.click();
+      toast('图片已下载');
+    } catch (err) {
+      console.error('export failed', err);
+      toast('导出失败，请重试');
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const openShare = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer,width=600,height=500');
+  };
+
+  const shareText = generateShareCopy(result.code);
+
+  const handleWeibo = () =>
+    openShare(
+      `https://service.weibo.com/share/share.php?url=${encodeURIComponent(permalink)}&title=${encodeURIComponent(shareText)}`,
+    );
+
+  const handleTwitter = () =>
+    openShare(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(permalink)}`,
+    );
+
+  const handleQQ = () =>
+    openShare(
+      `https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(permalink)}&title=${encodeURIComponent('CloseAI.moe — How Close Are You to AI?')}&summary=${encodeURIComponent(shareText)}`,
+    );
+
+  const handleWechat = async () => {
+    if (qrDataUrl) {
+      setQrDataUrl(null);
+      return;
+    }
+    const dataUrl = await QRCode.toDataURL(permalink, {
+      width: 320,
+      margin: 1,
+      color: { dark: '#ffffff', light: '#000000' },
+    });
+    setQrDataUrl(dataUrl);
+  };
+
+  const BTN =
+    'px-4 py-2.5 border border-neutral-700 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 font-sans text-xs md:text-sm tracking-wider disabled:opacity-40';
+
   return (
     <motion.div
       className="fixed inset-0 z-20 flex items-center justify-center bg-black"
@@ -16,37 +129,54 @@ export default function Epilogue({ onRestart }: EpilogueProps) {
       exit={{ opacity: 0, transition: { duration: 1 } }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="flex flex-col items-center gap-10 px-8">
-        {/* Slogan */}
-        <motion.p
-          className="font-sans text-xl md:text-2xl text-neutral-400 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          How Close Are You to AI?
-        </motion.p>
+      <div className="flex flex-col items-center gap-5 px-4 py-8 max-h-screen overflow-y-auto">
+        {/* 分享卡预览（缩放适配屏幕） */}
+        <div className="origin-top scale-[0.52] sm:scale-[0.65] md:scale-75 lg:scale-[0.8] -mb-[38%] sm:-mb-[28%] md:-mb-[20%] lg:-mb-[16%]">
+          <ShareCard result={result} personality={personality} providers={providers} />
+        </div>
 
-        {/* 域名 */}
-        <motion.div
-          className="font-mono text-sm text-neutral-600 tracking-[0.3em] uppercase"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-        >
-          closeai.moe
-        </motion.div>
+        {/* 分享矩阵 */}
+        <div className="flex flex-wrap justify-center gap-3 max-w-xl">
+          <button className={BTN} onClick={handleDownload} disabled={exporting}>
+            {exporting ? '生成中…' : '下载图片'}
+          </button>
+          <button className={BTN} onClick={() => copyText(permalink, '链接已复制')}>
+            复制链接
+          </button>
+          <button className={BTN} onClick={() => copyText(`${shareText}\n\n${permalink}`, '文案已复制')}>
+            复制文案
+          </button>
+          <button className={BTN} onClick={handleWeibo}>微博</button>
+          <button className={BTN} onClick={handleTwitter}>Twitter / X</button>
+          <button className={BTN} onClick={handleQQ}>QQ</button>
+          <button className={BTN} onClick={handleWechat}>
+            {qrDataUrl ? '收起二维码' : '微信'}
+          </button>
+        </div>
+
+        {/* 微信二维码 */}
+        {qrDataUrl && (
+          <motion.div
+            className="flex flex-col items-center gap-2 border border-neutral-800 p-4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={qrDataUrl} alt="微信扫码查看结果" width={180} height={180} />
+            <span className="font-sans text-xs text-neutral-500">微信扫码，查看这个测试结果</span>
+          </motion.div>
+        )}
+
+        {/* 提示 */}
+        <div className="h-5 font-sans text-xs text-neutral-500">{notice}</div>
 
         {/* 再测一次 */}
-        <motion.button
-          className="mt-4 px-8 py-4 border border-neutral-700 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 font-sans text-sm tracking-wider"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
+        <button
           onClick={onRestart}
+          className="mt-1 px-8 py-3 font-sans text-sm text-neutral-500 hover:text-white transition-colors tracking-wider border-b border-transparent hover:border-white"
         >
-          再测一次
-        </motion.button>
+          再测一次（会抽到新题）
+        </button>
       </div>
     </motion.div>
   );

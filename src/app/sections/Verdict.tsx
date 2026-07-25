@@ -7,11 +7,21 @@ import { getPersonalityByCode } from '@/app/lib/personalities';
 import TypeBadge from '@/app/components/TypeBadge';
 import DimensionAxis from '@/app/components/DimensionAxis';
 import GlitchText from '@/app/components/GlitchText';
+import type { ProviderSelection } from '@/app/types';
+import providersData from '@/app/lib/providers.json';
 
 interface VerdictProps {
   result: QuizResult | null;
+  providers?: ProviderSelection;
   onShare: () => void;
+  onRestart?: () => void;
 }
+
+const PROVIDER_MAP: Record<string, { name: string; icon: string | null; iconAvailable: boolean }> =
+  Object.fromEntries(
+    ((providersData as { providers: { id: string; name: string; icon: string | null; iconAvailable: boolean }[] }).providers)
+      .map((p) => [p.id, p]),
+  );
 
 const DIMENSION_META: Record<string, { left: string; right: string; leftPole: string }> = {
   AD: { left: 'AUTONOMY', right: 'DEPENDENCY', leftPole: 'A' },
@@ -27,7 +37,7 @@ const DIMENSION_META: Record<string, { left: string; right: string; leftPole: st
  *   0.3s 中央光点旋转 → 0.5s 扫描线从上到下扫过 →
  *   扫描后 TypeBadge 打字机出现 → 名称/Tagline → 四维轴错峰落位 → 文案 → 按钮
  */
-export default function Verdict({ result, onShare }: VerdictProps) {
+export default function Verdict({ result, providers, onShare, onRestart }: VerdictProps) {
   const personality = result ? getPersonalityByCode(result.code) : undefined;
 
   const reduceMotion = useMemo(
@@ -36,6 +46,12 @@ export default function Verdict({ result, onShare }: VerdictProps) {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     [],
   );
+
+  // 分享直链模式：无原始答题数据（answers 为空），隐藏维度轴，提示「我也测测」
+  const isSharedView = result !== null && result.answers.length === 0;
+  const selectedProviders = (providers?.selected ?? [])
+    .map((id) => PROVIDER_MAP[id])
+    .filter(Boolean);
 
   if (!result || !personality) {
     return (
@@ -115,7 +131,39 @@ export default function Verdict({ result, onShare }: VerdictProps) {
           &ldquo;{personality.tagline}&rdquo;
         </motion.p>
 
-        {/* 四维度轴（P2 §4.3：DimensionAxis 错峰落位，网格线背景） */}
+        {/* 供应商标签（P3 §1.5，分享直链模式无此数据） */}
+        {(selectedProviders.length > 0 || providers?.custom) && (
+          <motion.div
+            className="flex justify-center flex-wrap gap-2 mt-1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: t0 + 2.0, duration: 0.5 }}
+          >
+            {selectedProviders.map((p) => (
+              <span
+                key={p.name}
+                className="inline-flex items-center gap-2 border border-neutral-700 px-3 py-1 text-xs text-neutral-300 font-sans"
+              >
+                {p.iconAvailable && p.icon ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={`/icons/providers/${p.icon}.png`} alt="" width={14} height={14} />
+                ) : (
+                  <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">?</span>
+                )}
+                {p.name}
+              </span>
+            ))}
+            {providers?.custom && (
+              <span className="inline-flex items-center gap-2 border border-neutral-700 px-3 py-1 text-xs text-neutral-300 font-sans">
+                <span className="inline-flex items-center justify-center w-3.5 h-3.5 bg-neutral-800 text-neutral-500 text-[10px] font-mono">?</span>
+                {providers.custom}
+              </span>
+            )}
+          </motion.div>
+        )}
+
+        {/* 四维度轴（P2 §4.3：DimensionAxis 错峰落位；分享直链模式隐藏） */}
+        {!isSharedView && (
         <motion.div
           className="w-full mt-4 p-4 space-y-4 bg-[var(--color-bg-elevated)] border border-[var(--color-border)]"
           initial={{ opacity: 0 }}
@@ -140,6 +188,19 @@ export default function Verdict({ result, onShare }: VerdictProps) {
             );
           })}
         </motion.div>
+        )}
+
+        {/* 分享直链提示（P3 §3.3） */}
+        {isSharedView && (
+          <motion.div
+            className="mt-4 px-4 py-2 border border-neutral-800 font-sans text-xs text-neutral-500 tracking-wider"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: t0 + 2.1, duration: 0.5 }}
+          >
+            这是朋友分享的测试结果
+          </motion.div>
+        )}
 
         {/* 描述 / 诊断 / 讽刺忠告 */}
         <motion.div
@@ -166,12 +227,21 @@ export default function Verdict({ result, onShare }: VerdictProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: t0 + 3.3, duration: 0.5 }}
         >
-          <button
-            className="px-6 py-3 border border-neutral-700 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 font-sans text-sm tracking-wider"
-            onClick={onShare}
-          >
-            分享结果
-          </button>
+          {isSharedView ? (
+            <button
+              className="px-6 py-3 border border-neutral-700 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 font-sans text-sm tracking-wider"
+              onClick={onRestart}
+            >
+              我也测测 →
+            </button>
+          ) : (
+            <button
+              className="px-6 py-3 border border-neutral-700 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-300 font-sans text-sm tracking-wider"
+              onClick={onShare}
+            >
+              分享结果
+            </button>
+          )}
         </motion.div>
       </div>
     </motion.div>
