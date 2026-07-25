@@ -352,7 +352,7 @@ scripts/sync-providers.mjs   ← 同步脚本（已实现）
     └─ 输出 2：src/app/lib/providers.json          ← 前端消费的唯一数据源
 ```
 
-- **运行时机**：开发期手动运行（`node scripts/sync-providers.mjs`），或 `--fetch` 重新拉取 OpenRouter；建议每周一次
+- **运行时机**：数据固定，不做周期同步；仅在需要重大变更时手动运行（`node scripts/sync-providers.mjs`，或 `--fetch` 重新拉取 OpenRouter）
 - **缓存策略**：图标已存在则跳过（`cached`），仅下载新增；下载失败自动降级 `iconAvailable=false`
 - **别名映射**：OpenRouter provider ID → 图标 slug 的映射表内置在脚本中（如 `z-ai→zai`、`x-ai→xai`、`amazon→aws`），新 provider 无法匹配时自动落到占位图标，不会报错
 - **覆盖率现实**：PNG 静态包只有 285 个基础图标（不是报告里说的 100%），当前 58 家 provider 中 34 家有图标、24 家用占位——热门 7 家全部有图标，长尾用占位在视觉上可接受

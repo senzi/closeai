@@ -123,7 +123,7 @@ import { OpenAI } from '@lobehub/icons';
 1. **@lobehub/icons 覆盖率极高**：58/58 = 100%，不需要自行维护图标
 2. **别名映射是唯一成本**：约 13 个 provider 需要 ID → icon slug 的映射
 3. **CDN 直接可用**：`registry.npmmirror.com` 国内访问快，无需 npm 安装
-4. **后续同步流程**：
-   - 每周拉一次 OpenRouter API
+4. **后续同步流程**（2026-07-25 更新：已决定数据固定，不做周期同步，仅需重大变更时手动重跑）：
+   - ~~每周拉一次 OpenRouter API~~ → 数据固定，按需手动 `node scripts/sync-providers.mjs --fetch`
    - 用别名映射表转换 provider ID → icon slug
    - 生成 `providers.json` 供前端使用

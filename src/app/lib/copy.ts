@@ -11,7 +11,7 @@ import { getPersonalityByCode } from './personalities.ts';
 
 // ---------- 共享插槽池 ----------
 
-const OPENINGS = [
+export const OPENINGS = [
   '测了一下我和 AI 的关系，结果有点意思。',
   '原来我在 AI 眼里是这样的……',
   '一个残酷的自我认知测试。',
@@ -26,7 +26,7 @@ const OPENINGS = [
   '四个字母，比熟人还了解我。',
 ];
 
-const CLOSINGS = [
+export const CLOSINGS = [
   '你也来测测？→ closeai.moe',
   'How Close Are You to AI? → closeai.moe',
   '测完告诉我你是什么类型 → closeai.moe',
@@ -41,7 +41,7 @@ const CLOSINGS = [
 
 // ---------- 按类型的「一句评价」 ----------
 
-const COMMENTS: Record<string, string[]> = {
+export const COMMENTS: Record<string, string[]> = {
   ABMO: [
     '「AI 是你画笔的延伸」——希望画笔永远不知道这一点。',
     '署名是我的，这就够了。大概。',

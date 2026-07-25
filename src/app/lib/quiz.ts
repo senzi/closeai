@@ -348,10 +348,10 @@ export const QUESTION_BANK: Question[] = [
     id: 'BS-10', dimension: 'BS', weight: 1.0,
     variants: [
       {
-        text: 'AI 产品的发布会，你通常？',
+        text: '新模型发布，官方晒出大幅领先的跑分数据，你通常？',
         options: [
-          { label: '追直播，每次都像过节', value: 'B', trait: '发布会信徒' },
-          { label: '等实测，台上每句话都打过折', value: 'S', trait: '延迟相信' },
+          { label: '先信了，跑分说明硬实力', value: 'B', trait: '跑分信徒' },
+          { label: '打折看，自家考卷自家改', value: 'S', trait: '成绩复核员' },
         ],
       },
     ],
