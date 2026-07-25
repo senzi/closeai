@@ -2,7 +2,7 @@
  * quiz.ts —— P1 题库、抽题与评分（docs/P1-dimension-system.md v2）
  *
  * 设计要点：
- * - 题库 24 题（每维度 6 题），单次测试每维度抽 2 题共 8 题，跨维度打乱
+ * - 题库 40 题（每维度 10 题），单次测试每维度抽 2 题共 8 题，跨维度打乱
  * - 题组变体：同一道题可有若干套完整变体（题面+选项整套替换）
  * - 评分含权重（1.0 / 1.5）与平局规则：双 1.0 平局取左极并标记 borderline
  *
@@ -103,7 +103,7 @@ const POLE_PAIRS: Record<DimensionId, { left: Pole; right: Pole }> = {
   OG: { left: 'O', right: 'G' },
 };
 
-// ---------- 题库（24 题，每维度 6 题） ----------
+// ---------- 题库（40 题，每维度 10 题） ----------
 
 export const QUESTION_BANK: Question[] = [
   // ======== Dimension AD: Autonomy ↔ Dependency ========
@@ -186,6 +186,54 @@ export const QUESTION_BANK: Question[] = [
       },
     ],
   },
+  {
+    id: 'AD-7', dimension: 'AD', weight: 1.0,
+    variants: [
+      {
+        text: '出门旅行做攻略，你的风格是？',
+        options: [
+          { label: '让 AI 生成完整行程，照着走', value: 'D', trait: '行程托管' },
+          { label: '自己东拼西凑，AI 只查缺补漏', value: 'A', trait: '路线自绘' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'AD-8', dimension: 'AD', weight: 1.5,
+    variants: [
+      {
+        text: '深夜情绪低落又睡不着，你会找 AI 聊天吗？',
+        options: [
+          { label: '会，它比朋友随叫随到', value: 'D', trait: '情感外包' },
+          { label: '不会，情绪这事不靠算法', value: 'A', trait: '情绪自理' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'AD-9', dimension: 'AD', weight: 1.0,
+    variants: [
+      {
+        text: '简历、致辞、祝福语这类「体面文字」，你的态度是？',
+        options: [
+          { label: 'AI 写就完了，反正没人逐字看', value: 'D', trait: '体面外包' },
+          { label: '再敷衍也得自己写，署的是我的名', value: 'A', trait: '署名洁癖' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'AD-10', dimension: 'AD', weight: 1.0,
+    variants: [
+      {
+        text: 'AI 的答案和真人专家的说法冲突时，你更信？',
+        options: [
+          { label: 'AI，它读过的资料多', value: 'D', trait: '数据崇拜' },
+          { label: '真人，错了有人负责', value: 'A', trait: '责任锚定' },
+        ],
+      },
+    ],
+  },
 
   // ======== Dimension BS: Belief ↔ Skepticism ========
   {
@@ -256,6 +304,54 @@ export const QUESTION_BANK: Question[] = [
         options: [
           { label: '愿意相信，安全是他们的生命线', value: 'B', trait: '机构信任' },
           { label: '笑出声，上次他们也是这么说的', value: 'S', trait: '记性很好' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'BS-7', dimension: 'BS', weight: 1.0,
+    variants: [
+      {
+        text: '朋友转发「AI 复活逝者」的视频给你，你？',
+        options: [
+          { label: '感动，技术在延续思念', value: 'B', trait: '技术温情派' },
+          { label: '不适，这生意有点冷', value: 'S', trait: '边界敏感' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'BS-8', dimension: 'BS', weight: 1.5,
+    variants: [
+      {
+        text: '「AI 最终会取代人类的创造力」——你怎么看？',
+        options: [
+          { label: '会，只是时间问题', value: 'B', trait: '终局论者' },
+          { label: '不会，它只会取代平庸', value: 'S', trait: '创造力原教旨' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'BS-9', dimension: 'BS', weight: 1.0,
+    variants: [
+      {
+        text: '「AI 伴侣」App 越来越流行，你的看法是？',
+        options: [
+          { label: '理解，陪伴是真实的需求', value: 'B', trait: '需求至上' },
+          { label: '警惕，这是孤独的工业化', value: 'S', trait: '人间观察员' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'BS-10', dimension: 'BS', weight: 1.0,
+    variants: [
+      {
+        text: 'AI 产品的发布会，你通常？',
+        options: [
+          { label: '追直播，每次都像过节', value: 'B', trait: '发布会信徒' },
+          { label: '等实测，台上每句话都打过折', value: 'S', trait: '延迟相信' },
         ],
       },
     ],
@@ -334,6 +430,54 @@ export const QUESTION_BANK: Question[] = [
       },
     ],
   },
+  {
+    id: 'MC-7', dimension: 'MC', weight: 1.0,
+    variants: [
+      {
+        text: '你用 AI 生成的内容，最终大多去了哪里？',
+        options: [
+          { label: '成了我某个项目或作品的一部分', value: 'M', trait: '材料入库' },
+          { label: '用完就关掉了标签页', value: 'C', trait: '即用即弃' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'MC-8', dimension: 'MC', weight: 1.5,
+    variants: [
+      {
+        text: '给你三天空闲和一个 AI，你最可能？',
+        options: [
+          { label: '做出一个能跑的小东西', value: 'M', trait: '建造本能' },
+          { label: '把想看的剧和书都安排明白', value: 'C', trait: '享受优先' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'MC-9', dimension: 'MC', weight: 1.0,
+    variants: [
+      {
+        text: '你的收藏夹里最多的内容是？',
+        options: [
+          { label: '教程和提示词，迟早要动手', value: 'M', trait: '备料习惯' },
+          { label: '「先马后看」，然后没有然后', value: 'C', trait: '数字囤积' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'MC-10', dimension: 'MC', weight: 1.0,
+    variants: [
+      {
+        text: '朋友想做个小工具找你帮忙，你会？',
+        options: [
+          { label: '正好，拉上 AI 一起搞出来', value: 'M', trait: '组队开工' },
+          { label: '教他怎么问 AI，让他自己来', value: 'C', trait: '指路明灯' },
+        ],
+      },
+    ],
+  },
 
   // ======== Dimension OG: Open ↔ Guarded ========
   {
@@ -404,6 +548,54 @@ export const QUESTION_BANK: Question[] = [
         options: [
           { label: '划算，数据本来就是死资产', value: 'O', trait: '交易现实主义' },
           { label: '从来都不是一个好交易', value: 'G', trait: '拒绝签字' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'OG-7', dimension: 'OG', weight: 1.0,
+    variants: [
+      {
+        text: '换手机时，AI App 里的旧聊天记录你会？',
+        options: [
+          { label: '全部云同步，历史很宝贵', value: 'O', trait: '历史依赖' },
+          { label: '正好，一键清零重新开始', value: 'G', trait: '定期焚毁' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'OG-8', dimension: 'OG', weight: 1.5,
+    variants: [
+      {
+        text: '如果 AI 申请读取你的全部聊天记录来「更懂你」，你？',
+        options: [
+          { label: '愿意，越懂我越好用', value: 'O', trait: '以心换芯' },
+          { label: '不愿意，懂我是我自己的事', value: 'G', trait: '主权宣言' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'OG-9', dimension: 'OG', weight: 1.0,
+    variants: [
+      {
+        text: '看到「本对话可能用于改进模型」的小字，你？',
+        options: [
+          { label: '照聊不误，我又不特殊', value: 'O', trait: '人海隐身' },
+          { label: '默默把敏感内容咽回去', value: 'G', trait: '自我审查' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'OG-10', dimension: 'OG', weight: 1.0,
+    variants: [
+      {
+        text: '你会把和 AI 的聊天截图发到朋友圈或群聊吗？',
+        options: [
+          { label: '经常，好玩就发', value: 'O', trait: '分享即快乐' },
+          { label: '很少，那是我和它的事', value: 'G', trait: '私域守护' },
         ],
       },
     ],

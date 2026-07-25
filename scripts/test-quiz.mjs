@@ -32,13 +32,13 @@ function seededRng(seed = 42) {
 
 // ---------- 题库完整性 ----------
 
-test('题库共 24 题，每维度 6 题', () => {
-  assert.equal(QUESTION_BANK.length, 24);
+test('题库共 40 题，每维度 10 题', () => {
+  assert.equal(QUESTION_BANK.length, 40);
   for (const dim of ['AD', 'BS', 'MC', 'OG']) {
     assert.equal(
       QUESTION_BANK.filter((q) => q.dimension === dim).length,
-      6,
-      `${dim} 应有 6 题`,
+      10,
+      `${dim} 应有 10 题`,
     );
   }
 });
