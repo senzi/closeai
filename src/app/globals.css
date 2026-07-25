@@ -3,11 +3,36 @@
 @theme inline {
   --color-background: #000000;
   --color-foreground: #ffffff;
-  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-space-grotesk), var(--font-noto-sans-sc), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
-/* 全局禁用滚动 */
+/* ============================================================
+   P2 设计系统：黑白灰数据美学（docs/P2-visual-interaction.md §1）
+   不使用任何彩色；层次通过明度和透明度区分。
+   ============================================================ */
+:root {
+  /* 核心色 */
+  --color-bg: #000000;
+  --color-bg-elevated: #0a0a0a;
+  --color-bg-card: #111111;
+
+  /* 文字色 */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #aaaaaa;
+  --color-text-tertiary: #666666;
+  --color-text-dim: #333333;
+
+  /* 强调色 —— 严格限制使用场景 */
+  --color-accent: #ffffff;      /* 纯白用于焦点状态 */
+  --color-accent-dim: #888888;  /* 中灰用于悬停 */
+
+  /* 边框/分割线 */
+  --color-border: #222222;
+  --color-border-active: #444444;
+}
+
+/* 全局禁用滚动（P0 §4.1） */
 html,
 body {
   overflow: hidden;
@@ -28,13 +53,17 @@ body {
 
 /* 基础 body 样式 */
 body {
-  background: #000000;
-  color: #ffffff;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 脉冲动画 */
+/* ============================================================
+   动效原语
+   ============================================================ */
+
+/* 脉冲光晕（Cinema 脉冲光点） */
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
@@ -46,4 +75,76 @@ body {
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* GlitchText 故障艺术（P2 §2.1）：灰度分离 + 切片错位 */
+@keyframes glitch-slice-1 {
+  0%, 100% { clip-path: inset(0 0 85% 0); transform: translate(0, 0); }
+  20%      { clip-path: inset(10% 0 60% 0); transform: translate(-3px, 1px); }
+  40%      { clip-path: inset(40% 0 30% 0); transform: translate(3px, -1px); }
+  60%      { clip-path: inset(60% 0 10% 0); transform: translate(-2px, 1px); }
+  80%      { clip-path: inset(25% 0 55% 0); transform: translate(2px, 0); }
+}
+
+@keyframes glitch-slice-2 {
+  0%, 100% { clip-path: inset(80% 0 0 0); transform: translate(0, 0); }
+  20%      { clip-path: inset(55% 0 20% 0); transform: translate(3px, -1px); }
+  40%      { clip-path: inset(15% 0 70% 0); transform: translate(-3px, 1px); }
+  60%      { clip-path: inset(35% 0 45% 0); transform: translate(2px, 1px); }
+  80%      { clip-path: inset(70% 0 5% 0); transform: translate(-2px, -1px); }
+}
+
+.glitch-layer-1 {
+  animation: glitch-slice-1 var(--glitch-duration, 0.3s) steps(2, end) both;
+  color: var(--color-text-secondary);
+}
+
+.glitch-layer-2 {
+  animation: glitch-slice-2 var(--glitch-duration, 0.3s) steps(2, end) both;
+  color: var(--color-text-tertiary);
+}
+
+/* TypeBadge 打字机光标闪烁（P2 §2.4） */
+@keyframes cursor-blink {
+  0%, 49%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.animate-cursor-blink {
+  animation: cursor-blink 0.8s step-end infinite;
+}
+
+/* Verdict 扫描线入场（P2 §4.1） */
+@keyframes scanline-sweep {
+  0%   { top: 0%; opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.animate-scanline {
+  animation: scanline-sweep 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* DimensionAxis 光点扫描（P2 §2.2）：光点落位后向两侧发出的微光 */
+@keyframes axis-shimmer {
+  0%   { opacity: 0.6; transform: scaleX(0); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+
+.animate-axis-shimmer {
+  animation: axis-shimmer 0.8s ease-out forwards;
+  transform-origin: center;
+}
+
+/* ============================================================
+   减弱动效偏好（P2 §7 待决策 3 → 采纳：直接支持）
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-glow,
+  .glitch-layer-1,
+  .glitch-layer-2,
+  .animate-scanline,
+  .animate-axis-shimmer {
+    animation: none !important;
+  }
 }

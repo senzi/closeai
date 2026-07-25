@@ -312,13 +312,14 @@ interface TypeBadgeProps {
 
 ## 8. 检查清单
 
-- [ ] 全局 CSS 变量/设计 token 定义
-- [ ] GlitchText 组件
-- [ ] DimensionAxis 组件
-- [ ] ProgressRing 组件
-- [ ] TypeBadge 组件
-- [ ] 题目展示动画（Framer Motion variants）
-- [ ] 选项碎裂效果
-- [ ] 结果页扫描线动画
-- [ ] 响应式断点测试
-- [ ] `prefers-reduced-motion` 适配
+- [x] 全局 CSS 变量/设计 token 定义 — 2026-07-25：`globals.css` P2 §1.1 全量 token + 动效原语
+- [x] GlitchText 组件 — 2026-07-25：三层灰度切片，hover/mount/always 三种触发，三档强度
+- [x] DimensionAxis 组件 — 2026-07-25：光点弹性落位 + 扫描微光 + 端点高亮，接入 displayRatio
+- [x] ProgressRing 组件 — 2026-07-25：SVG 圆环 + 中心题号脉冲，含 aria 属性
+- [x] TypeBadge 组件 — 2026-07-25：数据块 + 分隔细线 + 打字机光标入场
+- [x] 题目展示动画（Framer Motion variants）— 2026-07-25：题面下滑、选项左右侧入（§3.2）
+- [x] 选项碎裂效果 — 2026-07-25：6 切片随机飞散（§3.3），reduced-motion 降级为直接切题
+- [x] 结果页扫描线动画 — 2026-07-25：旋转光点 → 扫描线 → 打字机 → 错峰落位（§4.1）
+- [ ] 响应式断点测试 — 基础断点已做（选项移动端垂直、字号断点），真机验证待做
+- [x] `prefers-reduced-motion` 适配 — 2026-07-25：CSS 动画层全局禁用 + 组件级降级
+- [x] 中文字体 Noto Sans SC — 2026-07-25：next/font 加载（300/400/700），font-sans 链路接入
