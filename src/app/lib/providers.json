@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T02:29:43.757Z",
+  "generatedAt": "2026-07-25T02:55:17.281Z",
   "source": "openrouter.ai/api/v1/models + @lobehub/icons-static-png",
   "maxSelectable": 3,
   "providers": [
@@ -21,8 +21,8 @@
     },
     {
       "id": "google",
-      "name": "Google",
-      "icon": "google",
+      "name": "Google (Gemini)",
+      "icon": "gemini",
       "iconAvailable": true,
       "modelCount": 32,
       "hot": true
@@ -53,8 +53,8 @@
     },
     {
       "id": "moonshotai",
-      "name": "Moonshot Kimi（月之暗面）",
-      "icon": "moonshot",
+      "name": "Moonshot (Kimi)",
+      "icon": "kimi",
       "iconAvailable": true,
       "modelCount": 8,
       "hot": true
@@ -100,14 +100,6 @@
       "hot": false
     },
     {
-      "id": "poolside",
-      "name": "Poolside",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 6,
-      "hot": false
-    },
-    {
       "id": "openrouter",
       "name": "OpenRouter",
       "icon": "openrouter",
@@ -126,7 +118,7 @@
     {
       "id": "bytedance-seed",
       "name": "豆包（字节）",
-      "icon": "bytedance",
+      "icon": "doubao",
       "iconAvailable": true,
       "modelCount": 5,
       "hot": false
@@ -145,14 +137,6 @@
       "icon": "perplexity",
       "iconAvailable": true,
       "modelCount": 5,
-      "hot": false
-    },
-    {
-      "id": "inclusionai",
-      "name": "蚂蚁（百灵）",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 4,
       "hot": false
     },
     {
@@ -182,17 +166,9 @@
     {
       "id": "tencent",
       "name": "腾讯混元",
-      "icon": "tencent",
+      "icon": "hunyuan",
       "iconAvailable": true,
       "modelCount": 3,
-      "hot": false
-    },
-    {
-      "id": "nex-agi",
-      "name": "Nex-agi",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 2,
       "hot": false
     },
     {
@@ -213,39 +189,7 @@
     },
     {
       "id": "xiaomi",
-      "name": "Xiaomi",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 2,
-      "hot": false
-    },
-    {
-      "id": "arcee-ai",
-      "name": "Arcee-ai",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 2,
-      "hot": false
-    },
-    {
-      "id": "rekaai",
-      "name": "Rekaai",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 2,
-      "hot": false
-    },
-    {
-      "id": "relace",
-      "name": "Relace",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 2,
-      "hot": false
-    },
-    {
-      "id": "morph",
-      "name": "Morph",
+      "name": "MiMo（小米）",
       "icon": null,
       "iconAvailable": false,
       "modelCount": 2,
@@ -268,74 +212,10 @@
       "hot": false
     },
     {
-      "id": "meituan",
-      "name": "Meituan",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "thinkingmachines",
-      "name": "Thinkingmachines",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "sakana",
-      "name": "Sakana",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "perceptron",
-      "name": "Perceptron",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "inception",
-      "name": "Inception",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
       "id": "upstage",
       "name": "Upstage",
       "icon": "upstage",
       "iconAvailable": true,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "writer",
-      "name": "Writer",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "allenai",
-      "name": "Allenai",
-      "icon": null,
-      "iconAvailable": false,
-      "modelCount": 1,
-      "hot": false
-    },
-    {
-      "id": "deepcogito",
-      "name": "Deepcogito",
-      "icon": null,
-      "iconAvailable": false,
       "modelCount": 1,
       "hot": false
     },
@@ -349,8 +229,8 @@
     },
     {
       "id": "baidu",
-      "name": "Baidu",
-      "icon": "baidu",
+      "name": "百度（文心）",
+      "icon": "wenxin",
       "iconAvailable": true,
       "modelCount": 1,
       "hot": false

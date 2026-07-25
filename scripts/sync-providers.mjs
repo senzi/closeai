@@ -39,9 +39,12 @@ const ALIAS_MAP = {
   'mistralai': 'mistral',
   'z-ai': 'zai',           // z.ai（GLM 系列），注意不是 xai
   'x-ai': 'xai',
-  'moonshotai': 'moonshot',
+  'moonshotai': 'kimi',    // 展示名 Moonshot (Kimi)，kimi 图标辨识度更高
+  'google': 'gemini',      // 展示名 Google (Gemini)，用 gemini 图标
   'aion-labs': 'aionlabs',
-  'bytedance-seed': 'bytedance',
+  'bytedance-seed': 'doubao',
+  'tencent': 'hunyuan',
+  'baidu': 'wenxin',
   'ibm-granite': 'ibm',
   'amazon': 'aws',         // Amazon Nova 系列
   'meta-llama': 'meta',
@@ -63,10 +66,12 @@ function normalizeId(raw) {
 }
 
 /**
- * 排除清单：个人微调作者 / 社区上传者（模型多为第三方微调，
- * 不是「谁家的 AI」语义下的供应商），不出现在选择列表。
+ * 排除清单：
+ * - 个人微调作者 / 社区上传者（模型多为第三方微调，不是「谁家的 AI」语义下的供应商）；
+ * - 无 lobehub 图标且辨识度不足的小众供应商（经产品确认剔除，仅保留 MiMo 用 monogram 占位）。
  */
 const EXCLUDE_IDS = new Set([
+  // 个人微调作者
   'thedrummer',
   'sao10k',
   'undi95',
@@ -74,25 +79,42 @@ const EXCLUDE_IDS = new Set([
   'mancer',
   'cognitivecomputations',
   'anthracite-org',
+  // 无图标小众供应商
+  'poolside',
+  'inclusionai',
+  'nex-agi',
+  'arcee-ai',
+  'rekaai',
+  'relace',
+  'morph',
+  'meituan',
+  'thinkingmachines',
+  'sakana',
+  'perceptron',
+  'inception',
+  'writer',
+  'allenai',
+  'deepcogito',
 ]);
 
 /** provider ID → 展示名（未收录的用 capitalize 兜底） */
 const NAME_MAP = {
   'openai': 'OpenAI',
   'anthropic': 'Anthropic',
-  'google': 'Google',
+  'google': 'Google (Gemini)',
   'deepseek': 'DeepSeek',
   'qwen': 'Qwen（通义）',
   'x-ai': 'xAI（Grok）',
   'z-ai': 'Z.ai（GLM）',
-  'moonshotai': 'Moonshot Kimi（月之暗面）',
+  'moonshotai': 'Moonshot (Kimi)',
   'meta-llama': 'Meta Llama',
   'mistralai': 'Mistral',
   'bytedance-seed': '豆包（字节）',
   'nvidia': 'NVIDIA',
   'minimax': 'MiniMax',
   'tencent': '腾讯混元',
-  'inclusionai': '蚂蚁（百灵）',
+  'xiaomi': 'MiMo（小米）',
+  'baidu': '百度（文心）',
   'stepfun': '阶跃星辰',
   'kwaipilot': '快手（Kwaipilot）',
   'openrouter': 'OpenRouter',
@@ -100,9 +122,7 @@ const NAME_MAP = {
   'perplexity': 'Perplexity',
   'amazon': 'Amazon',
   'ibm-granite': 'IBM Granite',
-  'poolside': 'Poolside',
   'nousresearch': 'Nous Research',
-  'sao10k': 'Sao10K',
 };
 
 /**

@@ -39,19 +39,26 @@ OpenRouter 的 models API **没有热度 / 用量 / 排名字段**，唯一可�
    与主条目重复，统计前去掉前缀合并；
 2. **同义 ID 合并**（`MERGE_MAP`）：`meta` → `meta-llama`，`bytedance` → `bytedance-seed`，
    `modelCount` 累加；
-3. **排除个人微调作者**（`EXCLUDE_IDS`）：thedrummer、sao10k、undi95、gryphe、
-   mancer、cognitivecomputations、anthracite-org —— 这些是社区微调上传者，
-   不是「谁家的 AI」语义下的供应商。
+3. **排除清单**（`EXCLUDE_IDS`，两类）：
+   - 个人微调作者 / 社区上传者：thedrummer、sao10k、undi95、gryphe、mancer、
+     cognitivecomputations、anthracite-org；
+   - 无 lobehub 图标且辨识度不足的小众供应商（产品确认剔除）：poolside、
+     inclusionai、nex-agi、arcee-ai、rekaai、relace、morph、meituan、
+     thinkingmachines、sakana、perceptron、inception、writer、allenai、deepcogito。
+   例外保留：`xiaomi`（展示名 MiMo（小米））无图标，用 monogram「M」占位。
 
 新增规则时按同样格式加进对应常量即可。
 
 ## 图标规则
 
 - 映射表：`ALIAS_MAP`（OpenRouter ID → lobehub slug），注意 `z-ai` → `zai`（不是 xai）；
+- 品牌对齐的图标选择：`google` → `gemini`、`moonshotai` → `kimi`、
+  `bytedance-seed` → `doubao`、`tencent` → `hunyuan`、`baidu` → `wenxin`
+  （用产品品牌图标，不用公司品牌图标）；
 - 校验：脚本对照 `scripts/data/lobehub_dark_icons.json`（PNG 包真实文件清单），
   清单里没有的 slug 标记 `iconAvailable: false`；
-- PNG 包只有约 285 个基础图标，覆盖不到所有供应商。**无图标的供应商前端显示
-  首字符 monogram 占位块**（与自定义项一致的风格），这是预期行为，不是 bug；
+- PNG 包只有约 285 个基础图标。**无图标的供应商前端显示首字符 monogram 占位块**
+  （当前仅 MiMo 一家），这是预期行为，不是 bug；
 - 图标只增不删：已缓存的 PNG 重复运行不会重新下载。
 
 ## 前端契约
