@@ -140,6 +140,19 @@ export default function ShareCard({ result, personality, providers, qrDataUrl }:
         })}
       </div>
 
+      {/* 人格文案三段（P3 修正：描述 / 关系诊断 / 讽刺忠告回到分享卡） */}
+      <div className="space-y-2.5 mt-1 max-w-[520px] self-center text-center">
+        <p className="text-[13px] text-neutral-300 leading-relaxed">
+          {personality.description}
+        </p>
+        <p className="text-[11px] text-neutral-500 leading-relaxed">
+          {personality.relationship}
+        </p>
+        <p className="text-[13px] text-neutral-400 italic leading-relaxed pt-1">
+          &ldquo;{personality.warning}&rdquo;
+        </p>
+      </div>
+
       {/* 底部：口号 + 域名二维码（黑码白底，保证扫码可靠性） */}
       <div className="h-px bg-neutral-800" />
       <div className="flex items-end justify-between">

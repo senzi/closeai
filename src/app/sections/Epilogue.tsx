@@ -27,6 +27,7 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [cardQr, setCardQr] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const personality = result ? getPersonalityByCode(result.code) : undefined;
   const permalink = result ? generatePermalink(result.code) : '';
@@ -45,6 +46,24 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
     });
     return () => { cancelled = true; };
   }, [permalink]);
+
+  // 预览容器高度自适应：transform scale 不改变布局高度，
+  // 用「可视高度 - 布局高度」动态计算负 margin，卡片变高（加了三段文案）也不会压住下方按钮。
+  useEffect(() => {
+    const el = previewRef.current;
+    if (!el) return;
+    const sync = () => {
+      el.style.marginBottom = `${el.getBoundingClientRect().height - el.offsetHeight}px`;
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    window.addEventListener('resize', sync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', sync);
+    };
+  }, []);
 
   const toast = (msg: string) => {
     setNotice(msg);
@@ -155,8 +174,8 @@ export default function Epilogue({ result, providers, onRestart }: EpilogueProps
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="flex flex-col items-center gap-5 px-4 py-8 max-h-screen overflow-y-auto">
-        {/* 分享卡预览（缩放适配屏幕） */}
-        <div className="origin-top scale-[0.52] sm:scale-[0.65] md:scale-75 lg:scale-[0.8] -mb-[38%] sm:-mb-[28%] md:-mb-[20%] lg:-mb-[16%]">
+        {/* 分享卡预览（缩放适配屏幕；负 margin 由 JS 按实际高度动态计算） */}
+        <div ref={previewRef} className="origin-top scale-[0.52] sm:scale-[0.65] md:scale-75 lg:scale-[0.8]">
           <ShareCard result={result} personality={personality} providers={providers} qrDataUrl={cardQr} />
         </div>
 
