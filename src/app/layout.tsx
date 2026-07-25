@@ -32,11 +32,20 @@ export const metadata: Metadata = {
     siteName: "CloseAI.moe",
     locale: "zh_CN",
     type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "CloseAI.moe — How Close Are You to AI?",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "CloseAI.moe — How Close Are You to AI?",
     description: "测测你与 AI 的亲近程度。8 道题，4 个字母。",
+    images: ["/og.png"],
   },
 };
 
